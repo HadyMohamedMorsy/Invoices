@@ -20,9 +20,10 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('type' , 30);
-            $table->decimal('total', 5, 2)->nullable();
+            $table->decimal('total_invoice', 5, 2);
+            $table->decimal('total', 5, 2);
             $table->decimal('presenter' , 5 ,2)->nullable();
-            $table->integer('years' , 1)->nullable();
+            $table->integer('years')->nullable();
             $table->decimal('total_pay' , 5, 2)->nullable();
             $table->unsignedBigInteger('lang_id');
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');

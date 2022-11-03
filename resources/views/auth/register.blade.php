@@ -1,4 +1,4 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -74,11 +74,11 @@
         </div>
     </div>
 </div>
-@endsection --}}
+@endsection
 
 
 
-@extends('layouts.master2')
+{{-- @extends('layouts.master2')
 @section('css')
 <!-- Sidemenu-respoansive-tabs css -->
 <link href="{{URL::asset('assets/plugins/sidemenu-responsive-tabs/css/sidemenu-responsive-tabs.css')}}" rel="stylesheet">
@@ -161,4 +161,4 @@
 		</div>
 @endsection
 @section('js')
-@endsection
+@endsection --}}

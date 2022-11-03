@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name' , 100);
             $table->integer('price');
-            $table->unsignedBigInteger('lang_id');
-            $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('attachment_id');
             $table->foreign('attachment_id')->references('id')->on('attachments')->onDelete('NO ACTION')->onUpdate('NO ACTION');
+            $table->unsignedBigInteger('lang_id');
+            $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

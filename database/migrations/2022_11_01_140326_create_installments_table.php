@@ -20,6 +20,11 @@ return new class extends Migration
             $table->decimal('pay_month' , 5 ,2);
             $table->date('due_date');
             $table->string('status');
+            $table->decimal('plus', 5 ,2)->default(0);
+            $table->decimal('fine' , 5 ,2)->nullable();
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('lang_id');
+            $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
