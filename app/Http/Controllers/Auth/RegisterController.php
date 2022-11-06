@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\attachments;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\UploadFileTrait;
 
 class RegisterController extends Controller
 {
+
+        use UploadFileTrait;
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -50,10 +54,17 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            'name'                      => ['required', 'string', 'max:255'],
+            'email'                     => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'                  => ['required', 'string', 'min:8', 'confirmed'],
+            'file'                      => 'required|max:10000|mimes:pdf,png,jpg',
+        ],
+        [
+            'file.required'             => 'this file is require to upload',
+            'file.max'                  => 'this file maximum 10000kb',
+            'file.mimes'                => 'this type is Strange'
+        ]
+        );
     }
 
     /**
@@ -61,13 +72,19 @@ class RegisterController extends Controller
      *
      * @param  array  $data
      * @return \App\Models\User
+     * 
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+                
+        $this->UploadFile($data['file'], 'images/users' , $user->id);
+
+        return $user;
+
     }
 }

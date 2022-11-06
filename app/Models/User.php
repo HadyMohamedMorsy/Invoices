@@ -58,5 +58,11 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims() {
         return [];
-    }  
+    } 
+
+    public function AttachmentUser() {
+
+        return $this->hasOne(attachments::class);
+
+    }
 }

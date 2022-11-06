@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -74,11 +74,11 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}
 
 
 
-{{-- @extends('layouts.master2')
+@extends('layouts.master2')
 @section('css')
 <!-- Sidemenu-respoansive-tabs css -->
 <link href="{{URL::asset('assets/plugins/sidemenu-responsive-tabs/css/sidemenu-responsive-tabs.css')}}" rel="stylesheet">
@@ -102,11 +102,12 @@
 							<div class="row">
 								<div class="col-md-10 col-lg-10 col-xl-9 mx-auto">
 									<div class="card-sigin">
-										<div class="mb-5 d-flex"> <a href="{{ url('/' . $page='index') }}"><img src="{{URL::asset('assets/img/brand/favicon.png')}}" class="sign-favicon ht-40" alt="logo"></a><h1 class="main-logo1 ml-1 mr-0 my-auto tx-28">Va<span>le</span>x</h1></div>
+										<div class="mb-5 d-flex"> <a href="{{ url('/') }}"><img src="{{URL::asset('assets/img/brand/favicon.png')}}" class="sign-favicon ht-40" alt="logo"></a><h1 class="main-logo1 ml-1 mr-0 my-auto tx-28">Va<span>le</span>x</h1></div>
 										<div class="main-signup-header">
 											<h2 class="text-primary">Get Started</h2>
 											<h5 class="font-weight-normal mb-4">It's free to signup and only takes a minute.</h5>
-											<form method="POST"  action="{{ route('register') }}">
+											<form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+                                                @csrf
 												<div class="form-group">
                                                     <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
                                                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -138,6 +139,13 @@
                                                     <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
                                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                                                 </div>
+                                                <div class="form-group">
+                                                    <div class="row mb-4">
+                                                        <div class="col-lg-12">
+                                                            <input type="file" class="dropify" data-height="200" name="file"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <button type="submit" class="btn btn-primary">
                                                     {{ __('Register') }}
                                                 </button>
@@ -150,6 +158,15 @@
 													</div>
 												</div>
 											</form>
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif  
 										</div>
 									</div>
 								</div>
@@ -161,4 +178,4 @@
 		</div>
 @endsection
 @section('js')
-@endsection --}}
+@endsection

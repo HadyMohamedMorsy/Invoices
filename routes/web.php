@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\CatagoriesController;
 use App\Http\Controllers\Gettheme;
 
 /*
@@ -20,17 +23,16 @@ use App\Http\Controllers\Gettheme;
 Auth::routes();
 
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Route::group(['middleware' => ['auth']], function () { 
+Route::group(['middleware' => ['auth']], function () { 
 
-//     // get any file From my system
-//     Route::get('/{page}', [gettheme::class, 'getShowPage']);
-// });
-
-Route::get('/admin' , function(){
-
-    return 'hello man';
+    // get any file From my system
+    Route::resource('/catagories' , CatagoriesController::class);
+    Route::resource('/products' , ProductsController::class);
+    Route::get('/{page}', [gettheme::class, 'getShowPage']);
 });
+
+
 
 

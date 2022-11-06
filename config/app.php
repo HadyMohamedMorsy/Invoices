@@ -194,7 +194,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Laravel\socialite\SocialiteServiceProvider::class,
+        // Laravel\socialite\SocialiteServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
@@ -216,7 +216,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
     'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-    'socialite' => Laravel\socialite\Facades\Socialite::class,
+    // 'socialite' => Laravel\socialite\Facades\Socialite::class,
     ])->toArray(),
 
 ];

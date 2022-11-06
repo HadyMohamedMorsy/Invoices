@@ -16,7 +16,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">Create Product </h4>
+							<h4 class="content-title mb-0 my-auto">Create Catagory </h4>
 						</div>
 					</div>
 				</div>
@@ -25,33 +25,31 @@
 @section('content')
 				<!-- row -->
 				<div class="row">
-					<form class="col-lg-12 col-md-12" action={{ route('products.store') }} method="POST">
+					<form class="col-lg-12 col-md-12" action={{ route('catagories.store') }} method="POST" enctype="multipart/form-data">
 						@csrf
 						{{ method_field('POST') }}
 						<div class="card">
 							<div class="card-body">
 								<div class="mb-4">
                                     <div class="form-group">
-                                        <label> Name Of product</label>
-                                        <input class="form-control" type="text" placeholder="Name of Section"  name="product_name" >
+                                        <label> Name Of Catagory</label>
+                                        <input class="form-control" type="text" placeholder="Name of Section"  name="name" >
                                     </div>
 								</div>
-								<div class="mb-4">
-								    <div class="form-group">
-								        <label> Select Of Catagory</label>
-								        {{-- <select class="SlectBox form-control SumoUnder" tabindex="-1" name="section_name">
-											<option value ="" selected > Select Your Section </option>
-											@foreach ($sections as $section)
-												<option value="{{ $section->id }}">{{ $section->section_name }}</option>
-											@endforeach
-										</select> --}}
-								    </div>
-								</div>
-								<div class="mb-4">
-                                    <div class="form-group">
-                                        <label> Description </label>
-                                        <textarea class="form-control" type="NameSection" placeholder="Description Of Your Section"  name="Description" ></textarea>
-                                    </div>
+								<div class="col-lg-12 col-md-12">
+									<div class="card">
+										<div class="card-body">
+											<div>
+												<h6 class="card-title mb-1">File Upload</h6>
+												<p class="text-muted card-sub-title">u must upload format your JPG/PNG/PDF</p>
+											</div>
+											<div class="row mb-4">
+												<div class="col-lg-12">
+													<input type="file" class="dropify" data-height="200" name="file"/>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 								<button class="btn ripple btn-primary bl-tl-0 bl-bl-0" type="submit">Submit</button>
 							</div>
