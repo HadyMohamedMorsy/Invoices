@@ -27,7 +27,7 @@
 										</div>
 									</a>
 									<div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow" x-placement="bottom-end">
-										<a href="#" class="dropdown-item d-flex ">
+										{{-- <a href="#" class="dropdown-item d-flex ">
 											<span class="avatar  ml-3 align-self-center bg-transparent"><img src="{{URL::asset('assets/img/flags/french_flag.jpg')}}" alt="img"></span>
 											<div class="d-flex">
 												<span class="mt-2">French</span>
@@ -56,7 +56,16 @@
 											<div class="d-flex">
 												<span class="mt-2">spain</span>
 											</div>
-										</a>
+										</a> --}}
+										{{ LaravelLocalization::getCurrentLocale() }}
+										@foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+											<a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" class="dropdown-item d-flex">
+											<span class="avatar  ml-3 align-self-center bg-transparent"><img src="{{URL::asset('assets/img/flags/'.$localeCode.'.jpg')}}" alt="img"></span>
+											<div class="d-flex">
+												<span class="mt-2">{{ $properties['native'] }}</span>
+											</div>
+											</a>
+										@endforeach
 									</div>
 								</div>
 							</li>

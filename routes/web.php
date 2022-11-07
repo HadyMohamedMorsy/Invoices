@@ -17,21 +17,24 @@ use App\Http\Controllers\Gettheme;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function(){
 
+    Auth::routes();
 
-
-Auth::routes();
-
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::group(['middleware' => ['auth']], function () { 
-
-    // get any file From my system
-    Route::resource('/catagories' , CatagoriesController::class);
-    Route::resource('/products' , ProductsController::class);
-    Route::get('/{page}', [gettheme::class, 'getShowPage']);
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    
+        Route::group(['middleware' => ['auth']], function () {
+    
+            Route::resource('/catagories' , CatagoriesController::class);
+            Route::resource('/products' , ProductsController::class);
+            Route::get('/{page}', [gettheme::class, 'getShowPage']);
+    
+        });
 });
+
+
+
+
 
 
 
