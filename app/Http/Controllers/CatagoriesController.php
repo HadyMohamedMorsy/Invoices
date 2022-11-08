@@ -18,7 +18,12 @@ class CatagoriesController extends Controller
      */
     public function index()
     {
-        return view('catagory.catagories');
+        $int = (int)__('requestLang.request_code');
+
+        return Catagories::where('lang_id', $int)->get();
+
+        
+
     }
 
     /**
