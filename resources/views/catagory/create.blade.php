@@ -16,7 +16,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">Create Catagory </h4>
+							<h4 class="content-title mb-0 my-auto">{{ __('categories.Create') }} <span id="config" data-page="category"> {{ __('categories.page') }} </span> </h4>
 						</div>
 					</div>
 				</div>
@@ -32,16 +32,17 @@
 							<div class="card-body">
 								<div class="mb-4">
                                     <div class="form-group">
-                                        <label> Name Of Catagory</label>
-                                        <input class="form-control" type="text" placeholder="Name of Section"  name="name" >
+                                        <label> {{ __('categories.Name Of category') }} </label>
+                                        <input class="form-control name_category" type="text" placeholder="{{ __('categories.Name Of category') }}"  name="name_cat">
+                                        <input  type="hidden"  name="lang_id" id="lang_id" value="{{ __('requestLang.request_code') }}">
                                     </div>
 								</div>
 								<div class="col-lg-12 col-md-12">
 									<div class="card">
 										<div class="card-body">
 											<div>
-												<h6 class="card-title mb-1">File Upload</h6>
-												<p class="text-muted card-sub-title">u must upload format your JPG/PNG/PDF</p>
+												<h6 class="card-title mb-1">{{ __('categories.File Upload') }}</h6>
+												<p class="text-muted card-sub-title">{{ __('categories.u must upload format your JPG/PNG/PDF') }}</p>
 											</div>
 											<div class="row mb-4">
 												<div class="col-lg-12">
@@ -51,7 +52,7 @@
 										</div>
 									</div>
 								</div>
-								<button class="btn ripple btn-primary bl-tl-0 bl-bl-0" type="submit">Submit</button>
+								<button class="btn ripple btn-primary bl-tl-0 bl-bl-0" type="submit">{{ __('categories.Submit') }}</button>
 							</div>
 						</div>
 					</form>
@@ -93,6 +94,11 @@
 <!--Internal Sumoselect js-->
 <script src="{{URL::asset('assets/plugins/sumoselect/jquery.sumoselect.js')}}"></script>
 <!-- Internal TelephoneInput js-->
+	@if (__('requestLang.request_code') == 1)
+		<script src="{{URL::asset('assets/js/Regular-en.js')}}"></script>
+	@else
+		<script src="{{URL::asset('assets/js/Regular-ar.js')}}"></script>
+	@endif
 <script src="{{URL::asset('assets/plugins/telephoneinput/telephoneinput.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/inttelephoneinput.js')}}"></script>
 @endsection

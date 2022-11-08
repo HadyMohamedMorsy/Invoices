@@ -10,6 +10,6 @@ class Catagories extends Model
     use HasFactory;
 
         
-    protected $fillable = ['name', 'lang_id'];
+    protected $fillable = ['name_cat', 'lang_id'];
 
 }

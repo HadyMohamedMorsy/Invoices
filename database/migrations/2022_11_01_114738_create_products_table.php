@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name' , 100);
+            $table->string('name_product' , 100);
             $table->integer('price');
             $table->unsignedBigInteger('lang_id');
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');

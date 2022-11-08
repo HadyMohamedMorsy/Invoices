@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('catagories', function (Blueprint $table) {
             $table->id();
-            $table->string('name' , 50);
+            $table->string('name_cat' , 50);
             $table->unsignedBigInteger('lang_id');
-            $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('lang_id')->references('id')->on('languages')->onDelete('NO ACTION')->onUpdate('NO ACTION');
             $table->timestamps();
         });
     }

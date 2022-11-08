@@ -39,23 +39,25 @@ class CatagoriesController extends Controller
      */
     public function store(Request $request)
     {
+
+
     $validated = $request->validate([
-        'name'              => 'required|unique:catagories|max:50',
+        'name_cat'     => 'required|unique:catagories|max:50',
         'file'              => 'required|max:10000|mimes:pdf,png,jpg',
     ],[
-        'name.required'     => 'name is required',
-        'name.unique'       => 'This Name is exist before don\'t Try Set Different Category',
-        'name.max'          => 'This Name maxim 50 character',
+        'name_cat.required'     => 'name is required',
+        'name_cat.unique'       => 'This Name is exist before don\'t Try Set Different Category',
+        'name_cat.max'          => 'This Name maxim 50 character',
         'file.required'     => 'this file is require to upload',
         'file.max'          => 'this file maximum 10000kb',
         'file.mimes'        => 'this type is Strange'
     ]);
 
+
         if($request->file){
-            
             Catagories::create([
-                'name'          => $request->name,
-                'lang_id'       => 1,
+                'name_cat'     => $request->name_cat,
+                'lang_id'      => $request->lang_id,
             ]);
 
             $cat_id = Catagories::latest()->first()->id;
