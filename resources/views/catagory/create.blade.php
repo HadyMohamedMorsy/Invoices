@@ -21,6 +21,13 @@
 					</div>
 				</div>
 				<!-- breadcrumb -->
+				<div class="dropdown mb-3">
+					<button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-primary" data-toggle="dropdown" id="dropdownMenuButton" type="button"> Select Your Data Save <i class="fas fa-caret-down ml-1"></i></button>
+					<div  class="dropdown-menu tx-13">
+						<a class="dropdown-item" href="#">Auto translate when save Your data</a>
+						<a class="dropdown-item" href="#">No Auto Translate When Save Your data</a>
+					</div>
+				</div>
 @endsection
 @section('content')
 				<!-- row -->
@@ -31,10 +38,14 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="mb-4">
-                                    <div class="form-group">
-                                        <label> {{ __('categories.Name Of category') }} </label>
-                                        <input class="form-control name_category" type="text" placeholder="{{ __('categories.Name Of category') }}"  name="name_cat">
+                                    <div class="form-group multi_category">
+                                        <label class="label_category mt-3"> {{ __('categories.Name Of category') }} </label>
+                                        <input class="form-control text_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="name_cat"  name="name_cat">
                                         <input  type="hidden"  name="lang_id" id="lang_id" value="{{ __('requestLang.request_code') }}">
+                                    </div>
+									 <div class="form-group multi_category">
+                                        <label class="label_category mt-3"> {{ __('categories.Name Of category') }} </label>
+                                        <input class="form-control name_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="slug_cat"  name="name_cat">
                                     </div>
 								</div>
 								<div class="col-lg-12 col-md-12">

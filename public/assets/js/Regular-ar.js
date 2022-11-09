@@ -16,7 +16,7 @@ nameCategory.forEach((item) => {
 
         item.addEventListener('change', (e) =>{
 
-        let pattern = /^[\u0621-\u064A\u0660-\u0669 ]+$/;
+        let pattern = /^[\u0621-\u064A\u0660-\u0669\s]+$/;
 
         let result = e.target.value.match(pattern);
 

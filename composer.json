@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "mcamara/laravel-localization": "^1.7",
+        "stichoza/google-translate-php": "^4.1",
         "tymon/jwt-auth": "*"
     },
     "require-dev": {

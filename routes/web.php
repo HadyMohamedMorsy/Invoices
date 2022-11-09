@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CatagoriesController;
 use App\Http\Controllers\Gettheme;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +19,8 @@ use App\Http\Controllers\Gettheme;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function(){
 
     Auth::routes();
@@ -28,7 +32,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::resource('/catagories' , CatagoriesController::class);
             Route::resource('/products' , ProductsController::class);
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
-    
         });
 });
 

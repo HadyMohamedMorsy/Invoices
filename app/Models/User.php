@@ -60,9 +60,4 @@ class User extends Authenticatable implements JWTSubject
         return [];
     } 
 
-    public function AttachmentUser() {
-
-        return $this->hasOne(attachments::class);
-
-    }
 }

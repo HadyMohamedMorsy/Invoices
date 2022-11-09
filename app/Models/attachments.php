@@ -11,7 +11,7 @@ class attachments extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image_name','product_id' , 'category_id' , 'user_id' , 'Invoice_id'];
+    protected $fillable = ['image_name' , 'Invoice_id'];
 
 
 

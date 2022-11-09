@@ -7,6 +7,9 @@ use App\Models\attachments;
 use Illuminate\Http\Request;
 use App\Traits\UploadFileTrait;
 
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
+
 class CatagoriesController extends Controller
 {
 
@@ -20,9 +23,9 @@ class CatagoriesController extends Controller
     {
         $int = (int)__('requestLang.request_code');
 
-        return Catagories::where('lang_id', $int)->get();
+        $Catagories =  Catagories::where('lang_id', $int)->get();
 
-        
+        return view('catagory.catagories' , compact('Catagories'));
 
     }
 
@@ -47,6 +50,7 @@ class CatagoriesController extends Controller
 
 
     $validated = $request->validate([
+
         'name_cat'     => 'required|unique:catagories|max:50',
         'file'              => 'required|max:10000|mimes:pdf,png,jpg',
     ],[
@@ -60,18 +64,36 @@ class CatagoriesController extends Controller
 
 
         if($request->file){
-            Catagories::create([
-                'name_cat'     => $request->name_cat,
-                'lang_id'      => $request->lang_id,
-            ]);
 
-            $cat_id = Catagories::latest()->first()->id;
-            
-            $this->UploadFile($request->file, 'images/catagories' , $cat_id);
-            
-            
+            if($request->lang_id == "1"){
+
+                $tr = new GoogleTranslate('ar'); // Translates into English
+
+                Catagories::create([
+                    'name_cat'     => $request->name_cat,
+                    'lang_id'      => $request->lang_id,
+                ]);
+                Catagories::create([
+                    'name_cat'     => $tr->translate($request->name_cat),
+                    'lang_id'      => $request->lang_id + 1,
+                ]);
+                
+            }else{
+
+                $tr = new GoogleTranslate('en'); // Translates into English
+
+                Catagories::create([
+                    'name_cat'     => $request->name_cat,
+                    'lang_id'      => $request->lang_id,
+                ]);
+                Catagories::create([
+                    'name_cat'     => $tr->translate($request->name_cat),
+                    'lang_id'      => $request->lang_id - 1,
+                ]);
+            } 
+
+
             return redirect('/catagories')->with("success","This catagories Is Added");
-            
         }
     }
 
