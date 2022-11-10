@@ -69,11 +69,11 @@ function TakeSelectingElement (Naming) {
 
 function WorkingFunctionTranslation(ParentElement , LabelClass,InputClass ){
     
-    let SelectForm = getElementBySelecting(`.${generateConfig(config, ParentElement)}`,"yes");
-    
-    console.log(SelectForm);
+        let SelectForm = getElementBySelecting(`.${generateConfig(config, ParentElement)}`,"yes");
 
+    
         let dropDownArrow = document.querySelectorAll(".dropdown-menu-arrow a");
+
 
         SelectForm.forEach((item) => {
 
@@ -99,15 +99,16 @@ function WorkingFunctionTranslation(ParentElement , LabelClass,InputClass ){
 
             let FiltrationArrLang = arrLang.filter((item) => item != NewLang[3]);
             
-            let cloneLabel;
-
-            let cloneInput;
             
             
             FiltrationArrLang.forEach((langItem) => {
 
-                cloneLabel = label.cloneNode(true);
-                cloneInput = input.cloneNode(true);
+
+               let cloneLabel = label.cloneNode(true);
+
+               let cloneInput = input.cloneNode(true);
+
+                let text = cloneLabel.textContent;
                 
                 cloneInput.removeAttribute("name");
                 cloneInput.removeAttribute("class");
@@ -116,6 +117,9 @@ function WorkingFunctionTranslation(ParentElement , LabelClass,InputClass ){
 
                 cloneInput.setAttribute("name", name + "_" + langItem);
                 cloneInput.setAttribute("class",name + "_" + langItem +" " +"form-control");
+
+                cloneLabel.innerHTML = "";
+                cloneLabel.textContent = `${text} (${langItem})`;
                 
                 
                 parent.appendChild(cloneLabel);
@@ -143,11 +147,33 @@ function WorkingFunctionTranslation(ParentElement , LabelClass,InputClass ){
         });
 }
 
-TakeSelectingElement('text');
-WorkingFunctionTranslation("multi", "label", "text");
+function WorkingFunctionTranslationDeleting(ParentElement , LabelClass , InputClass){
 
-TakeSelectingElement("test");
-WorkingFunctionTranslation("new", "label", "test");
+    let SelectForm = getElementBySelecting(`.${generateConfig(config, ParentElement)}`,"yes");
+
+
+    SelectForm.forEach((item)=>{
+
+        let label = item.querySelector(`.${generateConfig(config, LabelClass)}`);
+
+        let input = item.querySelector(`.${generateConfig(config, InputClass)}`);
+
+
+        let cloneLabel = label.cloneNode(true);
+
+        let cloneInput = input.cloneNode(true);
+
+        item.innerHTML = "";
+
+        item.appendChild(cloneLabel);
+        item.appendChild(cloneInput);
+    })
+    
+}
+
+TakeSelectingElement('name');
+
+   
 
 
 
