@@ -43,9 +43,9 @@
                                         <input class="form-control text_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="name_cat"  name="name_cat">
                                         <input  type="hidden"  name="lang_id" id="lang_id" value="{{ __('requestLang.request_code') }}">
                                     </div>
-									 <div class="form-group multi_category">
+									<div class="form-group new_category">
                                         <label class="label_category mt-3"> {{ __('categories.Name Of category') }} </label>
-                                        <input class="form-control name_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="slug_cat"  name="name_cat">
+                                        <input class="form-control test_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="naming_cat"  name="naming_cat">
                                     </div>
 								</div>
 								<div class="col-lg-12 col-md-12">
