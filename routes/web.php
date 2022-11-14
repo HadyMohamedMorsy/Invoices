@@ -29,7 +29,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
     
         Route::group(['middleware' => ['auth']], function () {
     
-            Route::resource('/catagories' , CatagoriesController::class);
+            Route::resource('catagories' , CatagoriesController::class);
+            Route::post('multi' , [CatagoriesController::class , 'multi']);
+            Route::post('search/category' , [CatagoriesController::class , 'search']);
             Route::resource('/products' , ProductsController::class);
             // Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('price');
             $table->unsignedBigInteger('lang_id');
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('image_name');
             $table->timestamps();
         });
     }

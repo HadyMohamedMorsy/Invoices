@@ -57,12 +57,12 @@ class RegisterController extends Controller
             'name'                      => ['required', 'string', 'max:255'],
             'email'                     => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'                  => ['required', 'string', 'min:8', 'confirmed'],
-            // 'file'                      => 'required|max:10000|mimes:pdf,png,jpg',
+            'file'                      => 'required|max:10000|mimes:pdf,png,jpg',
         ],
         [
-            // 'file.required'             => 'this file is require to upload',
-            // 'file.max'                  => 'this file maximum 10000kb',
-            // 'file.mimes'                => 'this type is Strange'
+            'file.required'             => 'this file is require to upload',
+            'file.max'                  => 'this file maximum 10000kb',
+            'file.mimes'                => 'this type is Strange'
         ]
         );
     }
@@ -83,6 +83,21 @@ class RegisterController extends Controller
         ]);
                 
         // $this->UploadFile($data['file'], 'images/users' , $user->id);
+
+        $requestFile = $data['file'];
+        // Take Extension 
+        
+        $file_extension = $requestFile->getClientOriginalExtension();
+
+        $file_name = time().'.'.$file_extension;
+        
+        // Upload Your File On The Server
+        $requestFile->move('images/users', $file_name);
+
+        User::find($user->id)->photoAttach()->create([
+            'image_name' => $file_name,
+            'type'       => $file_extension
+        ]);
 
         return $user;
 

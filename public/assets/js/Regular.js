@@ -56,6 +56,8 @@ function TakeSelectingElement (Naming) {
     
     let nameCategory = getElementBySelecting(`.${generateConfig(config,Naming)}`, "yes");
 
+    console.log(nameCategory);
+
     nameCategory.forEach((item) => {
 
         item.addEventListener('change', (e) =>{
@@ -124,24 +126,46 @@ function WorkingFunctionTranslation(ParentElement , LabelClass,InputClass ){
                 
                 parent.appendChild(cloneLabel);
                 parent.appendChild(cloneInput);
-
                 
+                                
                 if(langItem == 'ar'){
+
 
                 let arabic = document.querySelectorAll(`.${name}_${langItem}`);
                 
-                arabic.forEach((item)=>{
-                    
-                    item.addEventListener("change", (e) => {
+            
+                    arabic.forEach((item)=>{
                         
-                      e.target.value =  RegularExpressionAr(e.target.value);
-                    }); 
-                })
+                        item.addEventListener("change", (e) => {
+                            
+                            let test = RegularExpressionAr(e.target.value);
+
+                               e.target.value = test;
+
+                            console.log(test);
+
+                        }); 
+                    })
+
                 }else{
-                    item.addEventListener("change", (e) => {
-                        
-                      e.target.value = RegularExpressionEn(e.target.value);
-                    }); 
+
+                    
+                    let English = document.querySelectorAll(`.${name}_${langItem}`);
+
+                    console.log(English);
+            
+                    English.forEach((item) => {
+                        console.log("en");
+
+                        item.addEventListener("change", (e) => {
+
+                            let test = RegularExpressionEn(e.target.value);
+
+                            e.target.value = test;
+
+                            console.log(test);
+                        });
+                    });
                 }
             });
         });
@@ -172,9 +196,8 @@ function WorkingFunctionTranslationDeleting(ParentElement , LabelClass , InputCl
     
 }
 
-TakeSelectingElement('name');
+TakeSelectingElement("text");
 
-   
 
 
 

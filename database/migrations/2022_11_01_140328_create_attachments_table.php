@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
             $table->string('image_name');
-            $table->morphs('potables');
+            $table->morphs('attachmentable');
             $table->string('type' , 30);
             $table->timestamps();
         });

@@ -60,4 +60,9 @@ class User extends Authenticatable implements JWTSubject
         return [];
     } 
 
+    public function photo(){
+
+        return $this->morphOne(attachments::class , 'attachmentable');
+    }
+
 }

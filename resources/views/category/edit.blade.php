@@ -21,17 +21,11 @@
 					</div>
 				</div>
 				<!-- breadcrumb -->
-				<div class="dropdown mb-3 save-data">
-					<button aria-expanded="false" aria-haspopup="true" class="btn ripple button-saving  btn-primary" data-toggle="dropdown" id="dropdownMenuButton" type="button"> Auto translate when save Your data <i class="fas fa-caret-down ml-1"></i></button>
-					<div  class="dropdown-menu tx-13">
-						<a class="dropdown-item" href="#" data-auto="noAuto">No Auto Translate When Save Your data</a>
-					</div>
-				</div>
 @endsection
 @section('content')
 				<!-- row -->
 				<div class="row">
-					<form class="col-lg-12 col-md-12" action={{ route('catagories.store') }} method="POST" enctype="multipart/form-data">
+					<form class="col-lg-12 col-md-12 form_category" action={{ route('catagories.update' , $showCategory->id) }} method="POST" enctype="multipart/form-data">
 						@csrf
 						{{ method_field('POST') }}
 						<div class="card">
@@ -39,7 +33,7 @@
 								<div class="mb-4">
                                     <div class="form-group name_category">
                                         <label class="label_category mt-3"> {{ __('categories.Name Of category') }} </label>
-                                        <input class="form-control text_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="name_cat"  name="name_cat">
+                                        <input class="form-control text_category" type="text" placeholder="{{ __('categories.Name Of category') }}" data-name="name_cat"  name="name_cat_en" value={{ $showCategory->name_cat }}>
                                     </div>
 								</div>
 								<div class="col-lg-12 col-md-12">
@@ -57,7 +51,6 @@
 										</div>
 									</div>
 								</div>
-									<input  type="hidden"  name="lang_id" id="lang_id" value="{{ __('requestLang.request_code') }}">
 									<input  type="hidden"  name="translation_id" value={{ time();}}>
 								<button class="btn ripple btn-primary bl-tl-0 bl-bl-0" type="submit">{{ __('categories.Submit') }}</button>
 							</div>
@@ -104,36 +97,4 @@
 <script src="{{URL::asset('assets/js/Regular.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/telephoneinput.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/inttelephoneinput.js')}}"></script>
-<script>
-
-	let saveData = document.querySelector(".save-data");
-
-	saveData.addEventListener("click", (e) => {
-
-		const target = e.target.closest(".dropdown-item");
-
-		let button = document.querySelector(".button-saving");
-
-		if (!target) return;
-
-		if(target.dataset.auto == "noAuto"){
-
-			target.dataset.auto= "Auto" ;
-
-			button.innerHTML = "Auto Translate When Save Your data";
-
-			WorkingFunctionTranslation("name", "label", "text");
-
-		}else{
-
-			target.dataset.auto = "noAuto";
-
-			button.innerHTML = "No Auto Translate When Save Your data";
-
-			WorkingFunctionTranslationDeleting("name", "label", "text");
-
-		}
-		
-	}); 
-</script>
 @endsection
