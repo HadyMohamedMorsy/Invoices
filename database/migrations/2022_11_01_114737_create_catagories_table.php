@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name_cat' , 50);
             $table->unsignedBigInteger('lang_id');
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('NO ACTION')->onUpdate('NO ACTION');
+            $table->integer('translation_id');
             $table->timestamps();
         });
     }

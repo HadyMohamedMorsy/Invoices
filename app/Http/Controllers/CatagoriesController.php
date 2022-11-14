@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catagories;
+use App\Models\Languages;
 use App\Models\attachments;
 use Illuminate\Http\Request;
 use App\Traits\UploadFileTrait;
-
+use App\Traits\LanguagesTrait;
+use App\Traits\TranslateAutoCatTrait;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+
+use LaravelLocalization;
 
 
 class CatagoriesController extends Controller
 {
 
+    use LanguagesTrait;
+    use TranslateAutoCatTrait;
     use UploadFileTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -21,9 +28,98 @@ class CatagoriesController extends Controller
      */
     public function index()
     {
-        $int = (int)__('requestLang.request_code');
+        $idLang =  $this->Languages();
 
-        $Catagories =  Catagories::where('lang_id', $int)->get();
+        $firstCheck = Catagories::first();
+
+        if($firstCheck){
+
+            $LatestLangId =  Catagories::orderBy('lang_id', 'desc')->first()->lang_id;
+
+            
+            if($LatestLangId != $idLang){
+
+                $collection = $idLang - $LatestLangId;
+
+
+                $lanItem = Languages::get('id');
+
+                $arrLang = [];
+
+                foreach ($lanItem as $key => $value) {
+
+                    $arrLang[] = $value->id;
+                }
+
+
+                $takeLanguageId =  array_splice($arrLang , - $collection);
+
+
+                $takeLangSlug = [];
+
+                foreach( $takeLanguageId as $key) {
+                
+                    $takeLangSlug[] = Languages::where('id' , $key)->get(['Language_name' , 'id']);
+                }
+
+                $filterSlug = [];
+
+                $idLanguage = [];
+
+                foreach( $takeLangSlug as $key) {
+
+                    foreach ($key as $newKey) {
+
+                        $filterSlug[] =  $newKey->Language_name;
+
+                        $idLanguage[] =  $newKey->id;
+                    }
+                }
+
+                $catagoriesMustTranslateAuto = Catagories::all();
+
+                $checkId = [];
+
+                $index = 0;
+
+
+                foreach( $catagoriesMustTranslateAuto as $key){
+
+                    $checkId[$index] = $key->translation_id;
+
+                    $index++;
+                }
+
+                $checkIdUnique = array_unique($checkId);
+
+                $values = array_values($checkIdUnique);
+
+                foreach($checkIdUnique as $key){
+
+                    $allName[] = Catagories::where('translation_id' ,  $key)->first()->name_cat;
+                }
+         
+                for ($i=0; $i < count($filterSlug); $i++) { 
+
+                    for ($x=0; $x < count($checkIdUnique); $x++) { 
+
+                        $tr = new GoogleTranslate($filterSlug[$i]);
+
+                        Catagories::create([
+                            'name_cat'              => $tr->translate($allName[$x]),
+                            'lang_id'               => $idLanguage[$i],
+                            'translation_id'        => $values[$x],
+                        ]);
+                    }
+                }
+            }
+        }
+
+        $GetDataByLang = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
+
+        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->get();
+
+
 
         return view('catagory.catagories' , compact('Catagories'));
 
@@ -53,46 +149,35 @@ class CatagoriesController extends Controller
 
         'name_cat'     => 'required|unique:catagories|max:50',
         'file'              => 'required|max:10000|mimes:pdf,png,jpg',
-    ],[
-        'name_cat.required'     => 'name is required',
-        'name_cat.unique'       => 'This Name is exist before don\'t Try Set Different Category',
-        'name_cat.max'          => 'This Name maxim 50 character',
-        'file.required'     => 'this file is require to upload',
-        'file.max'          => 'this file maximum 10000kb',
-        'file.mimes'        => 'this type is Strange'
-    ]);
+        ],[
+            'name_cat.required'     => 'name is required',
+            'name_cat.unique'       => 'This Name is exist before don\'t Try Set Different Category',
+            'name_cat.max'          => 'This Name maxim 50 character',
+            'file.required'     => 'this file is require to upload',
+            'file.max'          => 'this file maximum 10000kb',
+            'file.mimes'        => 'this type is Strange'
+        ]);
 
 
         if($request->file){
 
-            if($request->lang_id == "1"){
+            $languagesData =  Languages::get(['id' , 'Language_name']);
 
-                $tr = new GoogleTranslate('ar'); // Translates into English
+                foreach($languagesData as $key){
 
-                Catagories::create([
-                    'name_cat'     => $request->name_cat,
-                    'lang_id'      => $request->lang_id,
-                ]);
-                Catagories::create([
-                    'name_cat'     => $tr->translate($request->name_cat),
-                    'lang_id'      => $request->lang_id + 1,
-                ]);
-                
-            }else{
+                    $tr = new GoogleTranslate($key->Language_name); // Translates into English
 
-                $tr = new GoogleTranslate('en'); // Translates into English
+                    Catagories::create([
+                        'name_cat'            => $tr->translate($request->name_cat),
+                        'lang_id'             => $key->id,
+                        'translation_id'      => $request->translation_id,
+                    ]);
+                }
 
-                Catagories::create([
-                    'name_cat'     => $request->name_cat,
-                    'lang_id'      => $request->lang_id,
-                ]);
-                Catagories::create([
-                    'name_cat'     => $tr->translate($request->name_cat),
-                    'lang_id'      => $request->lang_id - 1,
-                ]);
-            } 
+            $LatestImages =  Catagories::latest()->first()->id;
 
-
+            $this->UploadFile($request->file, 'images/Catagories',$LatestImages);
+            
             return redirect('/catagories')->with("success","This catagories Is Added");
         }
     }
@@ -103,9 +188,10 @@ class CatagoriesController extends Controller
      * @param  \App\Models\Catagories  $catagories
      * @return \Illuminate\Http\Response
      */
-    public function show(Catagories $catagories)
+    public function show($id)
     {
-        //
+    //   return  Catagories::find($id)->get();
+
     }
 
     /**

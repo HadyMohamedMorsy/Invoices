@@ -11,7 +11,12 @@ class attachments extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image_name' , 'Invoice_id'];
+    protected $fillable = ['image_name' , 'type'];
+
+    public function  attach() {
+
+        return $this->morphTo();
+    }
 
 
 

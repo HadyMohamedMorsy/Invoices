@@ -58,6 +58,7 @@
 									</div>
 								</div>
 									<input  type="hidden"  name="lang_id" id="lang_id" value="{{ __('requestLang.request_code') }}">
+									<input  type="hidden"  name="translation_id" value={{ time();}}>
 								<button class="btn ripple btn-primary bl-tl-0 bl-bl-0" type="submit">{{ __('categories.Submit') }}</button>
 							</div>
 						</div>

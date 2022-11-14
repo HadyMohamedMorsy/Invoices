@@ -31,7 +31,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
     
             Route::resource('/catagories' , CatagoriesController::class);
             Route::resource('/products' , ProductsController::class);
-            Route::get('/{page}', [gettheme::class, 'getShowPage']);
+            // Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
 });
 

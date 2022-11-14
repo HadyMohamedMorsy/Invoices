@@ -1,6 +1,6 @@
 <?php
 namespace App\Traits;
-use App\Models\attachments;
+use App\Models\Catagories;
 
 
 trait UploadFileTrait {
@@ -17,31 +17,11 @@ trait UploadFileTrait {
             $requestFile->move($path , $file_name);
 
             // check what is the path it will be inserted
-            switch ($path) {
-                case "images/catagories":
-                    attachments::create([
-                        'image_name' => $file_name,
-                        'category_id' => $id,
-                    ]);
-                break;
-                case "images/products":
-                    attachments::create([
-                        'image_name' => $file_name,
-                        'product_id' => $id,
-                    ]);
-                break;
-                case "images/users":
-                    attachments::create([
-                        'image_name' => $file_name,
-                        'user_id' => $id,
-                    ]);
-                break;
-                case "images/invoices":
-                    attachments::create([
-                        'image_name' => $file_name,
-                        'user_id' => $id,
-                    ]);
-                break;
-            }
+            $cat = Catagories::find($id);
+
+            $cat->photo()->create([
+                'image_name' => $file_name ,
+                'type'       => $file_extension,
+            ]);
     }
 }

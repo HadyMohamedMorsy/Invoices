@@ -166,6 +166,7 @@ function WorkingFunctionTranslationDeleting(ParentElement , LabelClass , InputCl
         item.innerHTML = "";
 
         item.appendChild(cloneLabel);
+        
         item.appendChild(cloneInput);
     })
     
