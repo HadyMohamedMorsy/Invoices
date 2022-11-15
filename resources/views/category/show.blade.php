@@ -1,5 +1,10 @@
 @extends('layouts.master')
 @section('css')
+<style>
+	form{
+		display: inline-block;
+	}
+</style>
 @endsection
 @section('page-header')
 				<!-- breadcrumb -->
@@ -35,7 +40,14 @@
 											<tr>
 												<td>{{ $showCategory->id }}</td>
 												<td>{{ $showCategory->name_cat }}</td>
-												<td> <a  href={{ route('catagories.edit' , $showCategory->translation_id) }}  class="btn btn-primary"  id="dropdownMenuButton"> Edit </a></td>
+												<td> 
+													<a  href={{ route('catagories.edit' , $showCategory->translation_id) }}  class="btn btn-primary"> Edit </a>
+													<form action="{{ route('catagories.destroy' , $showCategory->translation_id) }}" method="POST" class="Delete-form">
+														@csrf
+														{{ method_field('DELETE') }}
+            											<button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete </button>
+													</form>
+												</td>
 											</tr> 
 										</tbody>
 									</table>

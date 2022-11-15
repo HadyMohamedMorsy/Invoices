@@ -13,6 +13,8 @@ use App\Traits\TranslateAutoCatTrait;
 use JetBrains\PhpStorm\Language;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
+use Storage;
+
 use LaravelLocalization;
 
 
@@ -31,103 +33,11 @@ class CatagoriesController extends Controller
     public function index()
     {
 
-
-        // $idLang =  $this->Languages();
-
-        // $firstCheck = Catagories::first();
-
-        // if($firstCheck){
-
-        //     $LatestLangId =  Catagories::orderBy('lang_id', 'desc')->first()->lang_id;
-
-            
-        //     if($LatestLangId != $idLang){
-
-        //         $collection = $idLang - $LatestLangId;
-
-
-        //         $lanItem = Languages::get('id');
-
-        //         $arrLang = [];
-
-        //         foreach ($lanItem as $key => $value) {
-
-        //             $arrLang[] = $value->id;
-        //         }
-
-
-        //         $takeLanguageId =  array_splice($arrLang , - $collection);
-
-
-        //         $takeLangSlug = [];
-
-        //         foreach( $takeLanguageId as $key) {
-                
-        //             $takeLangSlug[] = Languages::where('id' , $key)->get(['Language_name' , 'id']);
-        //         }
-
-        //         $filterSlug = [];
-
-        //         $idLanguage = [];
-
-        //         foreach( $takeLangSlug as $key) {
-
-        //             foreach ($key as $newKey) {
-
-        //                 $filterSlug[] =  $newKey->Language_name;
-
-        //                 $idLanguage[] =  $newKey->id;
-        //             }
-        //         }
-
-        //         $catagoriesMustTranslateAuto = Catagories::all();
-
-        //         $checkId = [];
-
-        //         $index = 0;
-
-
-        //         foreach( $catagoriesMustTranslateAuto as $key){
-
-        //             $checkId[$index] = $key->translation_id;
-
-        //             $index++;
-        //         }
-
-        //         $checkIdUnique = array_unique($checkId);
-
-        //         $values = array_values($checkIdUnique);
-
-        //         foreach($checkIdUnique as $key){
-
-        //             $allName[] = Catagories::where('translation_id' ,  $key)->first()->name_cat;
-
-        //             $allImages[] = Catagories::where('translation_id' ,  $key)->first()->image_name;
-        //         }
-         
-        //         for ($i=0; $i < count($filterSlug); $i++) { 
-
-        //             for ($x=0; $x < count($checkIdUnique); $x++) { 
-
-        //                 $tr = new GoogleTranslate($filterSlug[$i]);
-
-        //                 Catagories::create([
-        //                     'name_cat'              => $tr->translate($allName[$x]),
-        //                     'lang_id'               => $idLanguage[$i],
-        //                     'image_name'            => $allImages[$x],
-        //                     'translation_id'        => $values[$x],
-        //                 ]);
-        //             }
-        //         }
-        //     }
-        // }
-
         $this->TranslateAutoCatTrait();
 
         $GetDataByLang = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
 
-        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->get();
-
+        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->paginate(5);
 
         return view('category.catagories' , compact('Catagories'));
 
@@ -153,9 +63,8 @@ class CatagoriesController extends Controller
     {
 
         $validFiled = 'name_cat_'.LaravelLocalization::getCurrentLocale();
-
+        
         $validated = $request->validate([
-
             $validFiled         =>   'required|unique:catagories,name_cat|max:50',
             'file'              => 'required|max:10000|mimes:pdf,png,jpg',
         ]);
@@ -163,17 +72,11 @@ class CatagoriesController extends Controller
         if($request->file){
 
             $languagesData =  Languages::get(['id' , 'Language_name']);
-
-
-            $requestFile = $request->file;
-            // Take Extension 
             
-            $file_extension = $requestFile->getClientOriginalExtension();
-
+            // Uploaded The Image On The system 
+            $file_extension = $request->file->getClientOriginalExtension();
             $file_name = time().'.'.$file_extension;
-            
-            // Upload Your File On The Server
-            $requestFile->move('images/Catagories', $file_name);
+            $request->file->move('images/Catagories' , $file_name);
 
                 foreach($languagesData as $key){
 
@@ -231,9 +134,36 @@ class CatagoriesController extends Controller
      * @param  \App\Models\Catagories  $catagories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Catagories $catagories)
+    public function update(Request $request , $id)
     {
-        //
+        $language_id = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
+
+        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $language_id);
+
+        $TakeImage =  $showCategory->first()->image_name;
+
+        $file_path = public_path().'/images/Catagories/'.$TakeImage;
+
+        if($file_path) {
+
+            unlink($file_path);
+
+        }
+
+        $validFiled = 'name_cat_'.LaravelLocalization::getCurrentLocale();
+
+        // Uploaded The Image On The system 
+        $file_extension = $request->file->getClientOriginalExtension();
+        $file_name = time().'.'.$file_extension;
+        $request->file->move('images/Catagories' , $file_name);
+
+        $showCategory->update([
+            'name_cat'      => $request[$validFiled],
+            'image_name'    => $this->NameFile($file_name), 
+        ]);
+
+        return redirect('/catagories')->with("updated","This catagories Is updated");
+
     }
 
     /**
@@ -242,9 +172,30 @@ class CatagoriesController extends Controller
      * @param  \App\Models\Catagories  $catagories
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Catagories $catagories)
+    public function destroy($translation_id)
     {
-        //
+
+        $showCategory =  Catagories::where('translation_id' , $translation_id);
+
+        $TakeImage =  $showCategory->first()->image_name;
+
+        $file_path = public_path().'/images/Catagories/'.$TakeImage;
+
+        if($file_path) {
+
+            unlink($file_path); //delete from storage
+        }
+
+        $GetCatagories =  Catagories::where('translation_id' , $translation_id)->get();
+
+        foreach ($GetCatagories as $category) {
+            
+            $category->delete();
+        }
+
+        return redirect('/catagories')->with("Deleted","This catagories Is Deleted");
+
+        
     }
 
     public function multi(Request $request) 
@@ -264,29 +215,22 @@ class CatagoriesController extends Controller
             ]);
         }
 
-            $requestFile = $request->file;
-            // Take Extension 
-            
-            $file_extension = $requestFile->getClientOriginalExtension();
+        // Uploaded The Image On The system 
+        $this->UploadFile($request->file , 'images/Catagories');
 
-            $file_name = time().'.'.$file_extension;
-            
-            // Upload Your File On The Server
-            $requestFile->move('images/Catagories', $file_name);
+            foreach($languagesData as $key){
 
-                foreach($languagesData as $key){
+                $RequestFiled = 'name_cat_'.$key->Language_name;
 
-                    $RequestFiled = 'name_cat_'.$key->Language_name;
+                Catagories::create([
+                    'name_cat'            => $request[$RequestFiled],
+                    'lang_id'             => $key->id,
+                    'image_name'          => $this->NameFile($request->file),
+                    'translation_id'      => $request->translation_id,
+                ]);
+            }
 
-                    Catagories::create([
-                        'name_cat'            => $request[$RequestFiled],
-                        'lang_id'             => $key->id,
-                        'image_name'          => $file_name,
-                        'translation_id'      => $request->translation_id,
-                    ]);
-                }
-
-                return redirect('/catagories')->with("success","This catagories Is Added");
+            return redirect('/catagories')->with("success","This catagories Is Added");
         }
     }
 
@@ -296,11 +240,11 @@ class CatagoriesController extends Controller
         
         $Lang = $request->Lang;
 
-       $LangId =  Languages::where('Language_name' , $Lang)->first();
+        $LangId =  Languages::where('Language_name' , $Lang)->first();
 
-       $Catagories =  Catagories::where('name_cat' , 'LIKE' , '%'.$request->search.'%')->where('lang_id' ,  $LangId->id)->get();
+        $Catagories =  Catagories::where('name_cat' , 'LIKE' , '%'.$request->search.'%')->where('lang_id' ,  $LangId->id)->get();
 
-      return view('category.search' , compact('Catagories'));
+        return view('category.search' , compact('Catagories'));
 
     }
 }

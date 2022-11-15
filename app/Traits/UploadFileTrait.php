@@ -1,27 +1,17 @@
 <?php
 namespace App\Traits;
-use App\Models\Catagories;
 
 
 trait UploadFileTrait {
     
-    public function UploadFile($requestFile,$path , $id) {
+    public function UploadFile($requestFile,$path) {
 
-            $requestFile = $requestFile;
-            // Take Extension 
-            $file_extension = $requestFile->getClientOriginalExtension();
+        // Take Extension 
+        $file_extension = $requestFile->getClientOriginalExtension();
 
-            $file_name = time().'.'.$file_extension;
-            
-            // Upload Your File On The Server
-            $requestFile->move($path , $file_name);
+        $file_name = time().'.'.$file_extension;
 
-            // check what is the path it will be inserted
-            $cat = Catagories::find($id);
-
-            $cat->photo()->create([
-                'image_name' => $file_name ,
-                'type'       => $file_extension,
-            ]);
+        $requestFile->move($path , $file_name);
     }
+
 }

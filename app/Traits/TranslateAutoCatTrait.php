@@ -5,6 +5,9 @@ use App\Models\Languages;
 use App\Models\Catagories;
 use App\Traits\LanguagesTrait;
 
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
+
 trait TranslateAutoCatTrait {
 
     use LanguagesTrait;
