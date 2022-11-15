@@ -59,9 +59,6 @@
 										<div class="card">
 											<div class="card-body">
 												<div class="pro-img-box">
-													<div class="d-flex product-sale">
-														<i class="mdi mdi-heart-outline ml-auto wishlist"></i>
-													</div>
 													<img class="w-100" src="{{URL::asset('images/Catagories/'.$Catagore->image_name)}}" alt="product-image">
 														<a href="{{ route('catagories.show' , $Catagore->translation_id) }}" class="adtocart"> <i class="las la-shopping-cart "></i>
 													</a>

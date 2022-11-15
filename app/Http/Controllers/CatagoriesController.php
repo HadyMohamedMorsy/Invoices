@@ -13,7 +13,6 @@ use App\Traits\TranslateAutoCatTrait;
 use JetBrains\PhpStorm\Language;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
-use Storage;
 
 use LaravelLocalization;
 
@@ -75,7 +74,9 @@ class CatagoriesController extends Controller
             
             // Uploaded The Image On The system 
             $file_extension = $request->file->getClientOriginalExtension();
+
             $file_name = time().'.'.$file_extension;
+            
             $request->file->move('images/Catagories' , $file_name);
 
                 foreach($languagesData as $key){

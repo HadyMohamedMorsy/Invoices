@@ -196,7 +196,6 @@ function WorkingFunctionTranslationDeleting(ParentElement , LabelClass , InputCl
     
 }
 
-TakeSelectingElement("text");
 
 
 

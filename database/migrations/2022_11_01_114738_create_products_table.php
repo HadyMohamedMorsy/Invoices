@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name_product' , 100);
+            $table->text('description');
             $table->integer('price');
             $table->unsignedBigInteger('lang_id');
             $table->foreign('lang_id')->references('id')->on('languages')->onDelete('cascade')->onUpdate('cascade');
             $table->string('image_name');
+            $table->integer('translation_id')->unsigned();
             $table->timestamps();
         });
     }

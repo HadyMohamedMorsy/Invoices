@@ -104,6 +104,8 @@
 <script src="{{URL::asset('assets/plugins/telephoneinput/telephoneinput.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/inttelephoneinput.js')}}"></script>
 <script>
+	
+	TakeSelectingElement("text");
 
 	let saveData = document.querySelector(".save-data");
 
