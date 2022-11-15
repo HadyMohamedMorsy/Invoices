@@ -94,7 +94,7 @@ class RegisterController extends Controller
         // Upload Your File On The Server
         $requestFile->move('images/users', $file_name);
 
-        User::find($user->id)->photoAttach()->create([
+        User::find($user->id)->photo()->create([
             'image_name' => $file_name,
             'type'       => $file_extension
         ]);

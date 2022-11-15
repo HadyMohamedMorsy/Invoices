@@ -32,94 +32,97 @@ class CatagoriesController extends Controller
     {
 
 
-        $idLang =  $this->Languages();
+        // $idLang =  $this->Languages();
 
-        $firstCheck = Catagories::first();
+        // $firstCheck = Catagories::first();
 
-        if($firstCheck){
+        // if($firstCheck){
 
-            $LatestLangId =  Catagories::orderBy('lang_id', 'desc')->first()->lang_id;
+        //     $LatestLangId =  Catagories::orderBy('lang_id', 'desc')->first()->lang_id;
 
             
-            if($LatestLangId != $idLang){
+        //     if($LatestLangId != $idLang){
 
-                $collection = $idLang - $LatestLangId;
-
-
-                $lanItem = Languages::get('id');
-
-                $arrLang = [];
-
-                foreach ($lanItem as $key => $value) {
-
-                    $arrLang[] = $value->id;
-                }
+        //         $collection = $idLang - $LatestLangId;
 
 
-                $takeLanguageId =  array_splice($arrLang , - $collection);
+        //         $lanItem = Languages::get('id');
+
+        //         $arrLang = [];
+
+        //         foreach ($lanItem as $key => $value) {
+
+        //             $arrLang[] = $value->id;
+        //         }
 
 
-                $takeLangSlug = [];
+        //         $takeLanguageId =  array_splice($arrLang , - $collection);
 
-                foreach( $takeLanguageId as $key) {
+
+        //         $takeLangSlug = [];
+
+        //         foreach( $takeLanguageId as $key) {
                 
-                    $takeLangSlug[] = Languages::where('id' , $key)->get(['Language_name' , 'id']);
-                }
+        //             $takeLangSlug[] = Languages::where('id' , $key)->get(['Language_name' , 'id']);
+        //         }
 
-                $filterSlug = [];
+        //         $filterSlug = [];
 
-                $idLanguage = [];
+        //         $idLanguage = [];
 
-                foreach( $takeLangSlug as $key) {
+        //         foreach( $takeLangSlug as $key) {
 
-                    foreach ($key as $newKey) {
+        //             foreach ($key as $newKey) {
 
-                        $filterSlug[] =  $newKey->Language_name;
+        //                 $filterSlug[] =  $newKey->Language_name;
 
-                        $idLanguage[] =  $newKey->id;
-                    }
-                }
+        //                 $idLanguage[] =  $newKey->id;
+        //             }
+        //         }
 
-                $catagoriesMustTranslateAuto = Catagories::all();
+        //         $catagoriesMustTranslateAuto = Catagories::all();
 
-                $checkId = [];
+        //         $checkId = [];
 
-                $index = 0;
+        //         $index = 0;
 
 
-                foreach( $catagoriesMustTranslateAuto as $key){
+        //         foreach( $catagoriesMustTranslateAuto as $key){
 
-                    $checkId[$index] = $key->translation_id;
+        //             $checkId[$index] = $key->translation_id;
 
-                    $index++;
-                }
+        //             $index++;
+        //         }
 
-                $checkIdUnique = array_unique($checkId);
+        //         $checkIdUnique = array_unique($checkId);
 
-                $values = array_values($checkIdUnique);
+        //         $values = array_values($checkIdUnique);
 
-                foreach($checkIdUnique as $key){
+        //         foreach($checkIdUnique as $key){
 
-                    $allName[] = Catagories::where('translation_id' ,  $key)->first()->name_cat;
-                    $allImages[] = Catagories::where('translation_id' ,  $key)->first()->image_name;
-                }
+        //             $allName[] = Catagories::where('translation_id' ,  $key)->first()->name_cat;
+
+        //             $allImages[] = Catagories::where('translation_id' ,  $key)->first()->image_name;
+        //         }
          
-                for ($i=0; $i < count($filterSlug); $i++) { 
+        //         for ($i=0; $i < count($filterSlug); $i++) { 
 
-                    for ($x=0; $x < count($checkIdUnique); $x++) { 
+        //             for ($x=0; $x < count($checkIdUnique); $x++) { 
 
-                        $tr = new GoogleTranslate($filterSlug[$i]);
+        //                 $tr = new GoogleTranslate($filterSlug[$i]);
 
-                        Catagories::create([
-                            'name_cat'              => $tr->translate($allName[$x]),
-                            'lang_id'               => $idLanguage[$i],
-                            'image_name'            => $allImages[$x],
-                            'translation_id'        => $values[$x],
-                        ]);
-                    }
-                }
-            }
-        }
+        //                 Catagories::create([
+        //                     'name_cat'              => $tr->translate($allName[$x]),
+        //                     'lang_id'               => $idLanguage[$i],
+        //                     'image_name'            => $allImages[$x],
+        //                     'translation_id'        => $values[$x],
+        //                 ]);
+        //             }
+        //         }
+        //     }
+        // }
+
+        $this->TranslateAutoCatTrait();
 
         $GetDataByLang = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
 
