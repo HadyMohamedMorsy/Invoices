@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CatagoriesController;
+use App\Http\Controllers\InvoiceItemsController;
 use App\Http\Controllers\Gettheme;
 
 
@@ -33,10 +34,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::post('multi' , [CatagoriesController::class , 'multi']);
             Route::post('search/category' , [CatagoriesController::class , 'search']);
             Route::resource('/products' , ProductsController::class);
+            Route::resource('/invoices' , InvoiceItemsController::class)->only([
+                'index', 'store'
+            ]);
+            Route::post('invoices/cart' , [InvoiceItemsController::class , 'cart']);
+            
+            
             // Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
-});
-
+    });
+    
 
 
 

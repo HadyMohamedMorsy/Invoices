@@ -69,7 +69,7 @@ class CatagoriesController extends Controller
         
         $validated = $request->validate([
             $this->GetValidInputLang('name_cat')  =>   'required|unique:catagories,name_cat|max:50',
-            'file'                      =>   'required|max:10000|mimes:pdf,png,jpg',
+            'file'                                =>   'required|max:10000|mimes:pdf,png,jpg',
         ]);
 
         if($request->file){

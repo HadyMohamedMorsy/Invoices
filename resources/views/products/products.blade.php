@@ -57,9 +57,12 @@
 									<div class="card">
 										<div class="card-body">
 											<div class="pro-img-box">
-												<img class="w-100" src="{{URL::asset('/images/products/'. $product->image_name)}}" alt="product-image">
-												<a href="{{route('products.show' , $product->translation_id)}}" class="adtocart"> <i class="las la-shopping-cart "></i>
+												<a href="{{route('products.show' , $product->translation_id)}}">
+													<img class="w-100" src="{{URL::asset('/images/products/'. $product->image_name)}}" alt="product-image">
 												</a>
+												<button class="adtocart" data_product ={{ $product->translation_id }}> 
+													<i class="las la-shopping-cart "></i>
+												</button>
 											</div>
 											<div class="text-center pt-3">
 												<h3 class="h6 mb-2 mt-4 font-weight-bold text-uppercase">{{ $product->name_product }}</h3>
@@ -85,4 +88,5 @@
 <!-- Internal Nice-select js-->
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/jquery.nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/nice-select.js')}}"></script>
+<script src="{{URL::asset('assets/js/addCart.js')}}"></script>
 @endsection

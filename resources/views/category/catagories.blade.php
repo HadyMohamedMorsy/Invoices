@@ -59,8 +59,8 @@
 										<div class="card">
 											<div class="card-body">
 												<div class="pro-img-box">
-													<img class="w-100" src="{{URL::asset('images/Catagories/'.$Catagore->image_name)}}" alt="product-image">
-														<a href="{{ route('catagories.show' , $Catagore->translation_id) }}" class="adtocart"> <i class="las la-shopping-cart "></i>
+													<a href="{{ route('catagories.show' , $Catagore->translation_id) }}">
+														<img class="w-100" src="{{URL::asset('images/Catagories/'.$Catagore->image_name)}}" alt="product-image">
 													</a>
 												</div>
 												<div class="text-center pt-3">

@@ -21,7 +21,7 @@
 							<li class="">
 								<div class="dropdown  nav-itemd-none d-md-flex">
 									<a href="#" class="d-flex  nav-item nav-link pl-0 country-flag1" data-toggle="dropdown" aria-expanded="false">
-										<span class="avatar country-Flag mr-0 align-self-center bg-transparent"><img src="{{URL::asset('assets/img/flags/us_flag.jpg')}}" alt="img"></span>
+										<span class="avatar country-Flag mr-0 align-self-center bg-transparent"><img src="{{URL::asset('assets/img/flags/'.LaravelLocalization::getCurrentLocale().'.jpg')}}" alt="img"></span>
 										<div class="my-auto">
 											<strong class="mr-2 ml-2 my-auto">English</strong>
 										</div>
