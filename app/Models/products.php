@@ -9,7 +9,7 @@ class products extends Model
 {
     use HasFactory;
 
-    protected $hidden = ['pivot'];
+    // protected $hidden = ['pivot'];
     protected $fillable = ['name_product', 'description'  , 'price' ,'lang_id' , 'image_name' , 'translation_id'];
 
     public function category(){

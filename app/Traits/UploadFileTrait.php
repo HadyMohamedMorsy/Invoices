@@ -4,14 +4,19 @@ namespace App\Traits;
 
 trait UploadFileTrait {
     
-    public function UploadFile($requestFile,$path) {
+    public function GetFile($requestFile) {
 
         // Take Extension 
         $file_extension = $requestFile->getClientOriginalExtension();
 
         $file_name = time().'.'.$file_extension;
 
-        $requestFile->move($path , $file_name);
+        return $file_name;
+    }
+
+    public function UploadFile($requestFile , $path , $image) {
+
+        $requestFile->move($path , $image);
     }
 
 }

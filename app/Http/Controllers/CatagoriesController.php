@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catagories;
+use App\Models\products;
 use App\Models\Languages;
-use App\Models\attachments;
-use App\Models\User;
+
 use Illuminate\Http\Request;
 use App\Traits\UploadFileTrait;
 use App\Traits\LanguagesTrait;
 use App\Traits\TranslateAutoCatTrait;
+
 use JetBrains\PhpStorm\Language;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
@@ -29,14 +30,30 @@ class CatagoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     // Get Lang  id
+    protected function GetIdLang(){
+        return Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
+    }
+
+     // Get GetValidInputLang 
+    protected function GetValidInputLang(){
+
+        return 'name_cat_'.LaravelLocalization::getCurrentLocale();
+    }
+
+     // Get GetLanguagesCount 
+    protected function LanguagesCount(){
+
+        return  Languages::get(['id' , 'Language_name']);
+    }
+
     public function index()
     {
 
-        $this->TranslateAutoCatTrait();
+        $this->TranslateAutoCatTrait('Catagories');
 
-        $GetDataByLang = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
-
-        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->paginate(6);
+        $Catagories =  Catagories::where('lang_id', $this->GetIdLang())->paginate(6);
 
         return view('category.catagories' , compact('Catagories'));
 
@@ -60,37 +77,30 @@ class CatagoriesController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validFiled = 'name_cat_'.LaravelLocalization::getCurrentLocale();
         
         $validated = $request->validate([
-            $validFiled         =>   'required|unique:catagories,name_cat|max:50',
-            'file'              => 'required|max:10000|mimes:pdf,png,jpg',
+            $this->GetValidInputLang()  =>   'required|unique:catagories,name_cat|max:50',
+            'file'                      =>   'required|max:10000|mimes:pdf,png,jpg',
         ]);
 
         if($request->file){
+    
+            $name_image = $this->GetFile($request->file);
 
-            $languagesData =  Languages::get(['id' , 'Language_name']);
-            
-            // Uploaded The Image On The system 
-            $file_extension = $request->file->getClientOriginalExtension();
+            foreach($this->LanguagesCount() as $key){
+                
+                $tr = new GoogleTranslate($key->Language_name); // Translates into English
+                
+                Catagories::create([
+                    'name_cat'            => $tr->translate($request[$this->GetValidInputLang()]),
+                    'lang_id'             => $key->id,
+                    'image_name'          => $name_image,
+                    'translation_id'      => $request->translation_id,
+                ]);
+                
+            }
 
-            $file_name = time().'.'.$file_extension;
-            
-            $request->file->move('images/Catagories' , $file_name);
-
-                foreach($languagesData as $key){
-
-                    $tr = new GoogleTranslate($key->Language_name); // Translates into English
-
-                    Catagories::create([
-                        'name_cat'            => $tr->translate($request[$validFiled]),
-                        'lang_id'             => $key->id,
-                        'image_name'          => $file_name,
-                        'translation_id'      => $request->translation_id,
-                    ]);
-
-                }
+            $this->UploadFile($request->file , 'images/Catagories' , $name_image);
 
             return redirect('/catagories')->with("success","This catagories Is Added");
         }
@@ -104,11 +114,20 @@ class CatagoriesController extends Controller
      */
     public function show($id)
     {
-        $language_id = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
+        $catagoriesProduct =  Catagories::with(['pro' => function($q){
+            $q->where('lang_id' , $this->GetIdLang());
+        }])->where('lang_id' , $this->GetIdLang() )->get();
 
-        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $language_id)->first();
+        $count = [];
 
-        return view('category.show' , compact('showCategory'));
+        foreach ($catagoriesProduct as $key) {
+
+            $counts = $key->pro;
+        }
+
+        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
+
+        return view('category.show' , compact(['showCategory' , 'counts']));
     }
 
     /**
@@ -119,13 +138,9 @@ class CatagoriesController extends Controller
      */
     public function edit($id)
     {
-
-        $language_id = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
-
-        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $language_id)->first();
+        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
 
         return view('category.edit' , compact('showCategory'));
-
     }
 
     /**
@@ -135,33 +150,44 @@ class CatagoriesController extends Controller
      * @param  \App\Models\Catagories  $catagories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request , $id)
-    {
-        $language_id = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
+    public function update(Request $request , $id){
 
-        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $language_id);
+
+        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang());
 
         $TakeImage =  $showCategory->first()->image_name;
 
+
         $file_path = public_path().'/images/Catagories/'.$TakeImage;
+
+
+        // Uploaded The Image On The system 
+        $name_image = $this->GetFile($request->file);
+
 
         if($file_path) {
 
             unlink($file_path);
-
         }
 
-        $validFiled = 'name_cat_'.LaravelLocalization::getCurrentLocale();
 
-        // Uploaded The Image On The system 
-        $file_extension = $request->file->getClientOriginalExtension();
-        $file_name = time().'.'.$file_extension;
-        $request->file->move('images/Catagories' , $file_name);
+       $oldImages =  Catagories::where('translation_id' , $id)->get();
+
+        foreach ($oldImages as $img) {
+
+            Catagories::where('translation_id' , $img->translation_id)->where('lang_id' , $img->lang_id)
+            ->update([
+                'image_name' => $name_image
+            ]);
+        }
 
         $showCategory->update([
-            'name_cat'      => $request[$validFiled],
-            'image_name'    => $this->NameFile($file_name), 
+            'name_cat'      => $request[$this->GetValidInputLang()],
+            'image_name'    => $name_image, 
         ]);
+
+
+        $this->UploadFile($request->file , 'images/Catagories' , $name_image);
 
         return redirect('/catagories')->with("updated","This catagories Is updated");
 
@@ -173,8 +199,7 @@ class CatagoriesController extends Controller
      * @param  \App\Models\Catagories  $catagories
      * @return \Illuminate\Http\Response
      */
-    public function destroy($translation_id)
-    {
+    public function destroy($translation_id){
 
         $showCategory =  Catagories::where('translation_id' , $translation_id);
 
@@ -199,13 +224,11 @@ class CatagoriesController extends Controller
         
     }
 
-    public function multi(Request $request) 
-    {
+    public function multi(Request $request) {
         if($request->file){
 
-        $languagesData =  Languages::get(['id' , 'Language_name']);
 
-        foreach($languagesData as $key){
+        foreach($this->LanguagesCount() as $key){
 
             $validFiled = 'name_cat_'.$key->Language_name;
 
@@ -217,19 +240,22 @@ class CatagoriesController extends Controller
         }
 
         // Uploaded The Image On The system 
-        $this->UploadFile($request->file , 'images/Catagories');
+            $name_image = $this->GetFile($request->file);
 
-            foreach($languagesData as $key){
-
-                $RequestFiled = 'name_cat_'.$key->Language_name;
-
+            
+            foreach($this->LanguagesCount() as $key){
+                
+                $RequestFiledLang = 'name_cat_'.$key->Language_name;
+                
                 Catagories::create([
-                    'name_cat'            => $request[$RequestFiled],
+                    'name_cat'            => $request[$RequestFiledLang],
                     'lang_id'             => $key->id,
-                    'image_name'          => $this->NameFile($request->file),
+                    'image_name'          => $name_image,
                     'translation_id'      => $request->translation_id,
                 ]);
             }
+
+            $this->UploadFile($request->file , 'images/Catagories' , $name_image);
 
             return redirect('/catagories')->with("success","This catagories Is Added");
         }

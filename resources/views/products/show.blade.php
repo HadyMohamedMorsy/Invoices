@@ -25,7 +25,7 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="main-content-label mg-b-5 mb-3">
-									Details About {{$showCategory->name_cat}}
+									Details About {{$showProduct->name_product}}
 								</div>
 								<div class="table-responsive">
 									<table class="table main-table-reference text-nowrap mb-0 mg-t-5">
@@ -33,24 +33,18 @@
 											<tr>
 												<th> id </th>
 												<th class="wd-15p border-bottom-0">Section_name</th>
-												<th class="wd-15p border-bottom-0">Products</th>
+												<th class="wd-15p border-bottom-0">Price</th>
 												<th> Action's</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td>{{ $showCategory->id }}</td>
-												<td>{{ $showCategory->name_cat }}</td>
-												<td>
-													@foreach ($counts as $count)
-
-														{{ $count->name_product.',' }}
-														
-													@endforeach
-												</td>
+												<td>{{ $showProduct->id }}</td>
+												<td>{{ $showProduct->name_product }}</td>
+												<td>{{ $showProduct->price }}</td>
 												<td> 
-													<a  href={{ route('catagories.edit' , $showCategory->translation_id) }}  class="btn btn-primary"> Edit </a>
-													<form action="{{ route('catagories.destroy' , $showCategory->translation_id) }}" method="POST" class="Delete-form">
+													<a  href={{ route('catagories.edit' , $showProduct->translation_id) }}  class="btn btn-primary"> Edit </a>
+													<form action="{{ route('catagories.destroy' , $showProduct->translation_id) }}" method="POST" class="Delete-form">
 														@csrf
 														{{ method_field('DELETE') }}
             											<button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete </button>

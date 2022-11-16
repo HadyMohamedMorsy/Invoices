@@ -7,11 +7,17 @@ use App\Models\Catagories;
 use App\Models\Languages;
 use Illuminate\Http\Request;
 
+use App\Traits\LanguagesTrait;
+use App\Traits\TranslateAutoCatTrait;
+
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use LaravelLocalization;
 
 class ProductsController extends Controller
 {
+    
+    use LanguagesTrait;
+    use TranslateAutoCatTrait;
     /**
      * Display a listing of the resource.
      *
@@ -19,11 +25,15 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        // return products::with(['category' => function($q){
-        //     $q->where('lang_id' , $this->GetCurrentId());
-        // }])->where('lang_id' , $this->GetCurrentId() )->get();
+        $this->TranslateAutoCatTrait('products');
 
-        return view('products.products');
+        $catagoriesProduct =  Catagories::with(['pro' => function($q){
+            $q->where('lang_id' , $this->GetCurrentId());
+        }])->where('lang_id' , $this->GetCurrentId() )->get();
+
+        $products = products::where('lang_id' , $this->GetCurrentId())->paginate(6);
+
+        return view('products.products' , compact(['catagoriesProduct' , 'products']));
     }
 
     /**
@@ -105,9 +115,12 @@ class ProductsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function show(products $products)
+    public function show($id)
     {
-        //
+        
+        $showProduct =  products::where('translation_id' , $id)->where('lang_id' , $this->GetCurrentId())->first();
+
+        return view('products.show' , compact('showProduct'));
     }
 
     /**
@@ -145,6 +158,7 @@ class ProductsController extends Controller
     }
 
     protected function GetCurrentId(){
+        
         return  Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
     }
 }
