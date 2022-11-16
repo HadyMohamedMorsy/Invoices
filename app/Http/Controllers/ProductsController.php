@@ -7,17 +7,23 @@ use App\Models\Catagories;
 use App\Models\Languages;
 use Illuminate\Http\Request;
 
+use App\Traits\UploadFileTrait;
 use App\Traits\LanguagesTrait;
-use App\Traits\TranslateAutoCatTrait;
+use App\Traits\TranslateAutoTrait;
 
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use LaravelLocalization;
 
 class ProductsController extends Controller
 {
-    
+    // Last Language
     use LanguagesTrait;
-    use TranslateAutoCatTrait;
+
+    // TranslateAuto ALL Application
+    use TranslateAutoTrait;
+
+    //upload File
+    use UploadFileTrait;
     /**
      * Display a listing of the resource.
      *
@@ -28,10 +34,10 @@ class ProductsController extends Controller
         $this->TranslateAutoCatTrait('products');
 
         $catagoriesProduct =  Catagories::with(['pro' => function($q){
-            $q->where('lang_id' , $this->GetCurrentId());
-        }])->where('lang_id' , $this->GetCurrentId() )->get();
+            $q->where('lang_id' , $this->GetIdLang());
+        }])->where('lang_id' , $this->GetIdLang() )->get();
 
-        $products = products::where('lang_id' , $this->GetCurrentId())->paginate(6);
+        $products = products::where('lang_id' , $this->GetIdLang())->paginate(6);
 
         return view('products.products' , compact(['catagoriesProduct' , 'products']));
     }
@@ -43,9 +49,8 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $CurrentLanguage = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
 
-        $GetCatagories = Catagories::where('lang_id' , $CurrentLanguage)->get();
+        $GetCatagories = Catagories::where('lang_id' , $this->GetIdLang())->get();
 
         return view('products.create' , compact('GetCatagories'));
     }
@@ -58,50 +63,38 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validFiled = 'name_pro_'.LaravelLocalization::getCurrentLocale();
-
-        $desc = 'des_pro_'.LaravelLocalization::getCurrentLocale();
-        
         $validated = $request->validate([
-
-            $validFiled         =>   'required|unique:products,name_product|max:50',
-            $desc               =>   'required',
-            'number_pro'        =>   'required',
-            'file'              =>   'required|max:10000|mimes:pdf,png,jpg',
+            $this->GetValidInputLang('name_pro')                 =>   'required|unique:products,name_product|max:50',
+            $this->GetValidInputLang('des_pro')                  =>   'required',
+            'number_pro'                                         =>   'required',
+            'file'                                               =>   'required|max:10000|mimes:pdf,png,jpg',
         ]);
 
         if($request->file){
 
-            $CurrentLanguage = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
-
-            $languagesData =  Languages::get(['id' , 'Language_name']);
             
-            // Uploaded The Image On The system 
-            $file_extension = $request->file->getClientOriginalExtension();
-
-            $file_name = time().'.'.$file_extension;
+            $name_image = $this->GetFile($request->file);
             
-            $request->file->move('images/products' , $file_name);
-
-                foreach($languagesData as $key){
-
-                    $tr = new GoogleTranslate($key->Language_name); // Translates into English
+            foreach($this->LanguagesCount() as $key){
+                
+                $tr = new GoogleTranslate($key->Language_name); // Translates into English
 
                     products::create([
-                        'name_product'        => $tr->translate($request[$validFiled]),
-                        'description'         => $tr->translate($request[$desc]),
+                        'name_product'        => $tr->translate($request[$this->GetValidInputLang('name_pro')]),
+                        'description'         => $tr->translate($request[$this->GetValidInputLang('des_pro')]),
                         'price'               => $request['number_pro'],
                         'lang_id'             => $key->id,
-                        'image_name'          => $file_name,
+                        'image_name'          => $name_image,
                         'translation_id'      => $request->translation_id,
                     ]);
-
+                    
                 }
 
-            $latest = products::orderBy('id', 'desc')->first()->translation_id;
+            $request->file->move('images/products' , $name_image);
+            
+            $latest =   products::orderBy('id', 'desc')->first()->translation_id;
 
-            $product =  products::where('translation_id' , $latest )->where('lang_id' , $this->GetCurrentId())->first();
+            $product =  products::where('translation_id' , $latest )->where('lang_id' , $this->GetIdLang())->first();
 
             $product->category()->attach($request->product_category);
 
@@ -117,8 +110,7 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        
-        $showProduct =  products::where('translation_id' , $id)->where('lang_id' , $this->GetCurrentId())->first();
+        $showProduct =  products::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
 
         return view('products.show' , compact('showProduct'));
     }
@@ -157,8 +149,4 @@ class ProductsController extends Controller
         //
     }
 
-    protected function GetCurrentId(){
-        
-        return  Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
-    }
 }

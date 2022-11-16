@@ -9,7 +9,7 @@ use App\Models\Languages;
 use Illuminate\Http\Request;
 use App\Traits\UploadFileTrait;
 use App\Traits\LanguagesTrait;
-use App\Traits\TranslateAutoCatTrait;
+use App\Traits\TranslateAutoTrait;
 
 use JetBrains\PhpStorm\Language;
 use Stichoza\GoogleTranslate\GoogleTranslate;
@@ -21,8 +21,13 @@ use LaravelLocalization;
 class CatagoriesController extends Controller
 {
 
+    // Last Language
     use LanguagesTrait;
-    use TranslateAutoCatTrait;
+
+    // TranslateAuto ALL Application
+    use TranslateAutoTrait;
+
+    //upload File
     use UploadFileTrait;
 
     /**
@@ -31,22 +36,6 @@ class CatagoriesController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     // Get Lang  id
-    protected function GetIdLang(){
-        return Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
-    }
-
-     // Get GetValidInputLang 
-    protected function GetValidInputLang(){
-
-        return 'name_cat_'.LaravelLocalization::getCurrentLocale();
-    }
-
-     // Get GetLanguagesCount 
-    protected function LanguagesCount(){
-
-        return  Languages::get(['id' , 'Language_name']);
-    }
 
     public function index()
     {
@@ -79,7 +68,7 @@ class CatagoriesController extends Controller
     {
         
         $validated = $request->validate([
-            $this->GetValidInputLang()  =>   'required|unique:catagories,name_cat|max:50',
+            $this->GetValidInputLang('name_cat')  =>   'required|unique:catagories,name_cat|max:50',
             'file'                      =>   'required|max:10000|mimes:pdf,png,jpg',
         ]);
 
@@ -92,7 +81,7 @@ class CatagoriesController extends Controller
                 $tr = new GoogleTranslate($key->Language_name); // Translates into English
                 
                 Catagories::create([
-                    'name_cat'            => $tr->translate($request[$this->GetValidInputLang()]),
+                    'name_cat'            => $tr->translate($request[$this->GetValidInputLang('name_cat')]),
                     'lang_id'             => $key->id,
                     'image_name'          => $name_image,
                     'translation_id'      => $request->translation_id,
@@ -182,7 +171,7 @@ class CatagoriesController extends Controller
         }
 
         $showCategory->update([
-            'name_cat'      => $request[$this->GetValidInputLang()],
+            'name_cat'      => $request[$this->GetValidInputLang('name_cat')],
             'image_name'    => $name_image, 
         ]);
 

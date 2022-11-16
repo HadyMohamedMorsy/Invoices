@@ -33,6 +33,7 @@
 											<tr>
 												<th> id </th>
 												<th class="wd-15p border-bottom-0">Section_name</th>
+												<th class="wd-15p border-bottom-0">Counts</th>
 												<th class="wd-15p border-bottom-0">Products</th>
 												<th> Action's</th>
 											</tr>
@@ -41,11 +42,10 @@
 											<tr>
 												<td>{{ $showCategory->id }}</td>
 												<td>{{ $showCategory->name_cat }}</td>
+												<td>{{ count($counts) }}</td>
 												<td>
 													@foreach ($counts as $count)
-
 														{{ $count->name_product.',' }}
-														
 													@endforeach
 												</td>
 												<td> 

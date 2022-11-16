@@ -9,7 +9,7 @@ use Mockery\Undefined;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
 
-trait TranslateAutoCatTrait {
+trait TranslateAutoTrait {
 
     use LanguagesTrait;
     
