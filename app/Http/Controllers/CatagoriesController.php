@@ -36,7 +36,7 @@ class CatagoriesController extends Controller
 
         $GetDataByLang = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
 
-        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->paginate(5);
+        $Catagories =  Catagories::where('lang_id', $GetDataByLang)->paginate(6);
 
         return view('category.catagories' , compact('Catagories'));
 

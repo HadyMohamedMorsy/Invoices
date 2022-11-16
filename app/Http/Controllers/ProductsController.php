@@ -19,6 +19,10 @@ class ProductsController extends Controller
      */
     public function index()
     {
+        // return products::with(['category' => function($q){
+        //     $q->where('lang_id' , $this->GetCurrentId());
+        // }])->where('lang_id' , $this->GetCurrentId() )->get();
+
         return view('products.products');
     }
 
@@ -59,7 +63,6 @@ class ProductsController extends Controller
 
         if($request->file){
 
-
             $CurrentLanguage = Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
 
             $languagesData =  Languages::get(['id' , 'Language_name']);
@@ -88,11 +91,9 @@ class ProductsController extends Controller
 
             $latest = products::orderBy('id', 'desc')->first()->translation_id;
 
-            $product =  products::where('translation_id' , $latest )->where('lang_id' , $CurrentLanguage)->first();
+            $product =  products::where('translation_id' , $latest )->where('lang_id' , $this->GetCurrentId())->first();
 
             $product->category()->attach($request->product_category);
-
-            return $product->with('category')->get();
 
             return redirect('/products')->with("success","This Products Is Added");
 
@@ -141,5 +142,9 @@ class ProductsController extends Controller
     public function destroy(products $products)
     {
         //
+    }
+
+    protected function GetCurrentId(){
+        return  Languages::where('Language_name' , LaravelLocalization::getCurrentLocale())->first()->id;
     }
 }
