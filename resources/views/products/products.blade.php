@@ -27,7 +27,7 @@
 										<select name="beast" id="select-beast" class="form-control  nice-select  custom-select">
 											<option value="0">--Select--</option>
 											@foreach ($catagory->pro as $product)
-											<option value="{{ $product->translation_id }}"> {{ $product->name_product }}</option>
+												<option value="{{ $product->translation_id }}"> {{ $product->name_product }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -60,7 +60,8 @@
 												<a href="{{route('products.show' , $product->translation_id)}}">
 													<img class="w-100" src="{{URL::asset('/images/products/'. $product->image_name)}}" alt="product-image">
 												</a>
-												<button class="adtocart" data_product ={{ $product->translation_id }}> 
+												<button class="adtocart" data_product ={{ $product->translation_id }}>
+													<input name="token" type="hidden" value="{{ csrf_token() }}" />
 													<i class="las la-shopping-cart "></i>
 												</button>
 											</div>

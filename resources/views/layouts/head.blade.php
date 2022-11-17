@@ -10,6 +10,7 @@
 <!-- Sidemenu css -->
 <link href="{{URL::asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">
 
+
 @if ( LaravelLocalization::getCurrentLocale()  == 'ar')
     <link rel="stylesheet" href="{{URL::asset('assets/css-rtl/sidemenu.css')}}">
     @yield('css')

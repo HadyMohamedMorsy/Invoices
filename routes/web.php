@@ -38,9 +38,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
                 'index', 'store'
             ]);
             Route::post('invoices/cart' , [InvoiceItemsController::class , 'cart']);
-            
-            
-            // Route::get('/{page}', [gettheme::class, 'getShowPage']);
+        
+            Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
     });
     

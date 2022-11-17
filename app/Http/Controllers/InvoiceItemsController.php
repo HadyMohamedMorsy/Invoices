@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\invoice_items;
+
+use App\Models\item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceItemsController extends Controller
 {
@@ -28,9 +30,16 @@ class InvoiceItemsController extends Controller
     }
 
     public function cart(Request $request)
-    {
-        return response()->json(['success' => 'Todo Added'],200);
-    }
+     {
+        // $exist = ['exist' => 'This is Product is Exist On Your Cart'];
+        // $Success = ['Success' => 'Your Product is Added On Your Cart'];
+        // $findIsExist  = item::where("item_id" , $request->id)->first();
 
-    
+        item::create([
+            "item_id" => $request->id,
+            "user_id " => "1",
+        ]);
+
+        return  response()->json($request->all());
+    }
 }

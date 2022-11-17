@@ -63,6 +63,7 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             $this->GetValidInputLang('name_pro')                 =>   'required|unique:products,name_product|max:50',
             $this->GetValidInputLang('des_pro')                  =>   'required',
