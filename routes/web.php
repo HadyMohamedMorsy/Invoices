@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CatagoriesController;
 use App\Http\Controllers\InvoiceItemsController;
+use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\Gettheme;
 
 
@@ -34,6 +35,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::post('multi' , [CatagoriesController::class , 'multi']);
             Route::post('search/category' , [CatagoriesController::class , 'search']);
             Route::resource('/products' , ProductsController::class);
+
+            // Controller InvoiceItems
             Route::resource('/invoices' , InvoiceItemsController::class)->only([
                 'index'
             ]);
@@ -42,7 +45,12 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::post('invoices/clear' , [InvoiceItemsController::class , 'ClearCart'])->name('clear.ClearCart');
             Route::post('invoices/checkout' , [InvoiceItemsController::class , 'Checkout'])->name('Checkout');
             Route::post('invoices/DeleteItem' , [InvoiceItemsController::class , 'DeleteItem'])->name('DeleteItem');
-        
+
+            
+            // Controller InvoicesController
+            Route::get('invoicesItems/install' , [InvoicesController::class , 'installments'])->name('installments');
+            Route::resource('invoicesItems' , InvoicesController::class);
+            
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
     });

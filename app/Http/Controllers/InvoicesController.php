@@ -14,8 +14,11 @@ class InvoicesController extends Controller
      */
     public function index()
     {
-        //
+        $invoices =  invoices::where('type' , "cash")->orWhere('type' , "كاش")->get();
+        return view('invoices.all_invoices-cash' , compact('invoices'));
     }
+        
+
 
     /**
      * Show the form for creating a new resource.
@@ -81,5 +84,11 @@ class InvoicesController extends Controller
     public function destroy(invoices $invoices)
     {
         //
+    }
+
+ public function installments()
+    {
+        $invoices =  invoices::where('type' , "installment")->orWhere('type' , "قسط")->get();
+        return view('invoices.all_invoices-installments' , compact('invoices'));
     }
 }

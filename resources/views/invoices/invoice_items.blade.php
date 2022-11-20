@@ -42,7 +42,7 @@
 									</div>
 									<div class="col-lg-4">
 										<p class="mg-b-10">Select Type Payment</p>
-										<select class="form-control select2-no-search products" name="product">
+										<select class="form-control select2-no-search products" name="Type_Payment">
 											<option label="Choose one">
 											</option>
 											@foreach ($TypePayment as $type)

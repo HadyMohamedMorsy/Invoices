@@ -7,6 +7,7 @@ use App\Models\carts;
 use App\Models\types;
 use App\Models\case_payment;
 use App\Models\products;
+use App\Models\invoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -96,7 +97,18 @@ class InvoiceItemsController extends Controller
      }
 
      public function Checkout(Request $request){
-        return $request;
+
+        invoices::create([
+            'number_invoice' => $request->invoice_number,
+            'status'         => $request->type_status,
+            'client_id'      => Auth::user()->id,
+            'type'           => $request->Type_Payment,
+            'total_invoice'  => $request->Checkout,
+            'total'          => $request->Checkout,
+        ]);
+
+        return redirect('/invoicesItems')->with("success","This catagories Is Added");
+        
      }
 
      public function DeleteItem(Request $request){
