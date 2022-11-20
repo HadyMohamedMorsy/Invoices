@@ -4,21 +4,70 @@
 <link href="{{URL::asset('assets/plugins/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet"/>
 <!-- Internal Select2 css -->
 <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
+<link href="{{URL::asset('assets/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
 @endsection
 @section('page-header')
 				<!-- breadcrumb -->
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">Ecommerce</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Product-Cart</span>
+							<h4 class="content-title mb-0 my-auto">Products</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Product-Cart</span>
 						</div>
 					</div>
 				</div>
 				<!-- breadcrumb -->
 @endsection
 @section('content')
-				<!-- row opened -->
-				 <div class="row">
+				<form class="row " id="Checkout" method="POST" action="{{ route('Checkout') }}">
+					<!--div-->
+					<div class="col-md-12 col-xl-12 col-xs-12 col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="main-content-label mg-b-5">
+									Add <span class="tx-sserif">Invoice</span>
+								</div>
+								<p class="mg-b-20">Your invoices </p>
+								<div class="row row-sm mg-b-20">
+									<div class="col-lg-4">
+										<div class="form-group">
+											<label> invoice_number </label>
+											<input class="form-control invoice_number" type="text" placeholder="Name of Section"  name="invoice_number">
+										</div>	
+									</div>
+									<div class="col-lg-4">
+										<div class="form-group">
+											<label> Date Invoice</label>
+											<input class="form-control" type="date" placeholder="Name of Section"  name="invoice_Date" value="<?php echo date('Y-m-d'); ?>">
+										</div>	
+									</div>
+									<div class="col-lg-4">
+										<p class="mg-b-10">Select Type Payment</p>
+										<select class="form-control select2-no-search products" name="product">
+											<option label="Choose one">
+											</option>
+											@foreach ($TypePayment as $type)
+											<option value="{{ $type->type_payment }}"
+												@if ($type->type_payment == "cash" || $type->type_payment == "كاش")
+													selected="selected"
+												@endif
+												>
+												{{  $type->type_payment }}
+											</option>
+											@endforeach
+										</select>
+									</div>
+									<div class="col-lg-12">
+										<div class="form-group">
+											<label> Note </label>
+											<textarea class="form-control"  placeholder="Description Of Your Section"  name="note" ></textarea>
+										</div>
+									</div>
+								</div>
+							<!-- row -->	
+						<!-- row closed -->
+							</div>
+						</div>
+					</div>
 					<div class="col-xl-12 col-md-12">
 						<div class="card">
 							<div class="card-body">
@@ -30,12 +79,21 @@
 												<th class="text-right">Product</th>
 												<th class="w-150">Quantity</th>
 												<th>SUBTOTAL</th>
-												<th><a class="btn btn-sm btn-outline-danger" href="#">Clear Cart</a></th>
+												<th>
+													<a class="btn btn-sm btn-outline-danger" href="{{ route('clear.ClearCart') }}"
+													onclick="event.preventDefault();
+															document.getElementById('clear').submit();">
+															Clear Cart
+													</a>
+													<form id="clear" action="{{ route('clear.ClearCart') }}" method="POST" class="d-none">
+														@csrf
+													</form>
+												</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($items as $key)
-
+	
 												@foreach($key->cart as $endPoint)
 												<tr>
 													<td>
@@ -67,7 +125,7 @@
 																		<button class="btn btn-primary btn-block plus">Plus</button>
 																	</div>
 																	<div class="col-md-6">
-																		<input type="text" class="form-control quantity" placeholder="quantaty" name="quantaty" value="{{$key->count}}">
+																		<input type="text" class="form-control quantity" placeholder="quantaty" value="{{$key->count}}">
 																	</div>
 																	<div class="col-md-3">
 																		<button class="btn btn-danger btn-block minus">Minus</button>
@@ -76,8 +134,12 @@
 															</div>
 														</div>
 													</td>
-													<td class="text-center text-lg text-medium">{{$endPoint->price}}</td>
-													<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
+													<td class="text-center text-lg text-medium subtotal">{{$key->total}}</td>
+													<td class="text-center">
+														<a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item" data-remove={{$key->cart_id}}>
+															<i class="fa fa-trash"></i>
+														</a>
+													</td>
 												</tr>
 												@endforeach
 											@endforeach
@@ -86,23 +148,24 @@
 									</table>
 								</div>
 								<div class="shopping-cart-footer  border-top-0">
-									<div class="column">
-										<form class="coupon-form" method="post">
-											<input class="form-control" type="text" placeholder="Coupon code" required="">
-											<button class="btn btn-outline-primary" type="submit">Apply Coupon</button>
-										</form>
-									</div>
-									<div class="column text-lg">Subtotal: <span class="tx-20 font-weight-bold mr-2">$112</span></div>
+									<div class="column text-lg">Subtotal: <span class="tx-20 font-weight-bold mr-2 total"></span></div>
 								</div>
 								<div class="shopping-cart-footer">
-									<div class="column"><a class="btn btn-secondary" href="#">Back to Shopping</a></div>
-									<div class="column"><a class="btn btn-primary" href="#" data-toast="" data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Your cart" data-toast-message="is updated successfully!">Update Cart</a><a class="btn btn-success" href="#">Checkout</a></div>
+									<div class="column"><a class="btn btn-secondary" href="{{ route('products.index') }}">Back to Shopping</a></div>
+									<div class="column">
+										<a class="btn btn-success" href="{{ route('Checkout') }}"
+										onclick="event.preventDefault();
+												document.getElementById('Checkout').submit();">
+												Checkout
+										</a>
+										<input type="hidden" name="Checkout" class="Checkout">
+										<input type="hidden" name="type_status" value="{{ $typeStatusPayment->payment_status }}">
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<!-- row closed -->
+				</form>
 			</div>
 			<!-- Container closed -->
 		</div>
@@ -116,4 +179,9 @@
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/jquery.nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/js/items.js')}}"></script>
+<script src="{{URL::asset('assets/js/No-Invoice.js')}}"></script>
+
+<!--Internal  Notify js -->
+<script src="{{URL::asset('assets/plugins/notify/js/notifIt.js')}}"></script>
+<script src="{{URL::asset('assets/plugins/notify/js/notifit-custom.js')}}"></script>
 @endsection

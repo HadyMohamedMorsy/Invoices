@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 
 use App\Models\carts;
+use App\Models\types;
+use App\Models\case_payment;
 use App\Models\products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,30 +36,41 @@ class InvoiceItemsController extends Controller
 
     public function index()
     {
+        $TypePayment = types::where('lang_id' ,$this->GetIdLang())->get();
+        $typeStatusPayment = case_payment::where('lang_id' ,$this->GetIdLang())->first();
         $items =  carts::with(['cart' => function($q){
             $q->where('lang_id' , $this->GetIdLang());
         }])->get();
 
-        return view('invoices.invoice_items' , compact('items'));
+        return view('invoices.invoice_items' , compact('items' , 'TypePayment' , 'typeStatusPayment'));
     }
 
 
     public function countItems(Request $request)
     {
-        $Success = ['Success' => 'Your Product is Added On Your Cart'];
+        $Success = ['Success' => 'Your Product is Updated On Your Cart'];
+        $Error = ['Error' => 'There is Wrong Try Again'];
 
         $CartItem  = carts::where("cart_id" , $request->cart_id )->where("user_id", Auth::user()->id)->first();
 
-        $CartItem->update([
-            'count' => $request->count
+       $checkUpdate =  $CartItem->update([
+            'count' => $request->count,
+            'total' => $request->subtotal
         ]);
+        if($checkUpdate){
 
-        return  response()->json($Success , 200);
+            return  response()->json($Success , 200);
+
+        }else{
+
+            return  response()->json($Error , 404);
+        }
     }
 
     public function cart(Request $request)
      {
         $exist = ['exist' => 'This is Product is Exist On Your Cart'];
+
         $Success = ['Success' => 'Your Product is Added On Your Cart'];
 
         $findIsExist  = carts::where("cart_id" , $request->id )->where("user_id", Auth::user()->id)->first();
@@ -69,10 +82,32 @@ class InvoiceItemsController extends Controller
             carts::create([
                 "cart_id" => $request->id,
                 "user_id" => Auth::user()->id,
+                'total'   => $request->price
             ]);
     
             return  response()->json($Success , 201);
         }
 
-    }
+     }
+
+     public function ClearCart(){
+        carts::truncate();
+        return view('Home.index');
+     }
+
+     public function Checkout(Request $request){
+        return $request;
+     }
+
+     public function DeleteItem(Request $request){
+
+        $Success = ['Success' => 'Your Product is Deleted On Your Cart'];
+
+        $findIsExist  = carts::where("cart_id" , $request->Cart_id )->where("user_id", Auth::user()->id)->first();
+
+        $findIsExist->delete();
+
+        return  response()->json($Success , 201);
+
+     }
 }

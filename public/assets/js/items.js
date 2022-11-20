@@ -17,11 +17,11 @@ const timeout = function (s) {
 
 async function changing(self, token ,errorMsg = "Something went wrong 💥💥") {
 
-
     let dataForm = {
-        '_token':token.value,
-        'cart_id':self.closest('td').querySelector('.data_item').value,
-        'count': self.value,
+        _token: token.value,
+        cart_id: self.closest("td").querySelector(".data_item").value,
+        count: self.value,
+        subtotal: +self.closest("tr").querySelector(".subtotal").innerHTML,
     };
     
     try {
@@ -45,34 +45,88 @@ async function changing(self, token ,errorMsg = "Something went wrong 💥💥")
 
         const data = await response.json();
 
-        // Executes the func after delay time.
+        if (data.Success) {
 
-        console.log(data);
+            not7(data.Success);
+
+        } else {
             
+            not11(data.Error);
+        }   
         
-
+        console.log(data);
+        
     } catch (error) {
 
         throw error;
     }
 }
 
+async function DeleteItem(self, token ,errorMsg = "Something went wrong 💥💥"){
+
+    let dataForm = {
+        _token: token.value,
+        Cart_id: self.getAttribute("data-remove"),
+    };
+
+    try {
+        const fetchData = fetch(getHref[0] + "invoices/DeleteItem", {
+            method: "POST", // or 'PUT'
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": token.value,
+            },
+            body: JSON.stringify(dataForm),
+        });
+
+        const response = await Promise.race([fetchData, timeout(TIMEOUT_SEC)]);
+
+        if (!response.ok)
+            throw new Error(
+                `${errorMsg} <strong>(${response.status})</strong> .Try again!`
+            );
+
+        const data = await response.json();
+        // Executes the func after delay time.
+        console.log(data);
+
+
+    } catch (error) {
+        throw error;
+    }
+
+}
+
 if(document.querySelectorAll('.quantity')){
 
     let plus = document.querySelectorAll('.plus');
     let minus = document.querySelectorAll('.minus');
+    let remove = document.querySelectorAll(".remove-from-cart");
 
     plus.forEach((item)=>{
         item.addEventListener('click' , (e)=>{
             calculationPlus(item);
+            CalculationTotal();
         })
     })
 
     minus.forEach((item)=>{
         item.addEventListener('click' , (e)=>{
             calculationMinus(item);
+            CalculationTotal();
         })
     })
+
+    remove.forEach((item)=>{
+        item.addEventListener('click', (e)=>{
+            e.preventDefault();
+            DeleteItem(item, token);
+            item.closest('tr').remove();
+            CalculationTotal();
+        })
+    })
+
+    CalculationTotal();
 }
 
 const UpdateDebounce = debounce((target)=>{
@@ -114,4 +168,22 @@ function calculationMinus(target){
     }
     UpdateDebounce(quantity,token);
 }
+
+function CalculationTotal() {
+    let subtotal = document.querySelectorAll(".subtotal");
+    let total = document.querySelector(".total");
+
+    let PriceTotal = 0;
+
+    subtotal.forEach((item) => {
+        PriceTotal += +item.innerHTML;
+    });
+
+    let Checkout = document.querySelector(".Checkout");
+
+    total.innerHTML = PriceTotal + "$";
+    Checkout.value = PriceTotal;
+}
+
+
 

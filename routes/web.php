@@ -39,6 +39,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             ]);
             Route::post('invoices/cart' , [InvoiceItemsController::class , 'cart']);
             Route::post('invoices/countItems' , [InvoiceItemsController::class , 'countItems']);
+            Route::post('invoices/clear' , [InvoiceItemsController::class , 'ClearCart'])->name('clear.ClearCart');
+            Route::post('invoices/checkout' , [InvoiceItemsController::class , 'Checkout'])->name('Checkout');
+            Route::post('invoices/DeleteItem' , [InvoiceItemsController::class , 'DeleteItem'])->name('DeleteItem');
         
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });

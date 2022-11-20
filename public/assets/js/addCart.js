@@ -22,6 +22,7 @@ async function changing(self, icon, errorMsg = "Something went wrong 💥💥") 
     let dataForm = {
         '_token':self.firstElementChild.value,
         'id':self.getAttribute("data_product"),
+        'price' : self.closest(".card-body").querySelector(".price").getAttribute('data-price')
     };
     
     try {

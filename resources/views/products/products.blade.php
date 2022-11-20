@@ -69,7 +69,7 @@
 											</div>
 											<div class="text-center pt-3">
 												<h3 class="h6 mb-2 mt-4 font-weight-bold text-uppercase">{{ $product->name_product }}</h3>
-												<h4 class="h5 mb-0 mt-2 text-center font-weight-bold text-danger">  {{ $product->price }} $ </h4>
+												<h4 class="h5 mb-0 mt-2 text-center font-weight-bold text-danger price" data-price = {{ $product->price }}>  {{ $product->price }} $ </h4>
 											</div>
 										</div>
 									</div>
