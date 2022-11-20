@@ -49,9 +49,9 @@ function not6() {
 		bottom:'10'
 	});
 }
-function not7() {
+function not7(Item) {
 	notif({
-		msg: "<b>Success:</b> Well done Details Submitted Successfully",
+		msg: "<b>Success:</b>" + Item,
 		type: "success"
 	});
 }
@@ -64,10 +64,10 @@ function not8() {
 	});
 }
 
-function not9() {
+function not9(item) {
 	notif({
 		type: "warning",
-		msg: "<b>Warning:</b> Something Went Wrong",
+		msg: "<b>Warning:</b>" + item,
 		position: "left"
 	});
 }
@@ -81,10 +81,10 @@ function not10() {
 	});
 }
 
-function not11() {
+function not11(Item) {
 	notif({
 		type: "error",
-		msg: "<b>Error: </b>This error will stay here until you click it.",
+		msg: "<b>Error: </b>" + Item,
 		position: "center",
 		autohide: false
 	});

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('cart_id')->references('translation_id')->on('products')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->tinyInteger('count' , 3)->default(1);
             $table->timestamps();
         });
     }

@@ -30,151 +30,58 @@
 												<th class="text-right">Product</th>
 												<th class="w-150">Quantity</th>
 												<th>SUBTOTAL</th>
-												<th>DISCOUNT</th>
 												<th><a class="btn btn-sm btn-outline-danger" href="#">Clear Cart</a></th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="card-aside-img">
-															<img src="{{URL::asset('assets/img/ecommerce/01.jpg')}}" alt="img" class="h-60 w-60">
-														</div>
-														<div class="media-body">
-															<div class="card-item-desc mt-0">
-																<h6 class="font-weight-semibold mt-0 text-uppercase">Flower pot</h6>
-																<dl class="card-item-desc-1">
-																	<dt>Size: </dt>
-																	<dd>XXL</dd>
-																</dl>
-																<dl class="card-item-desc-1">
-																	<dt>Color: </dt>
-																	<dd>Green and Black color</dd>
-																</dl>
+											@foreach($items as $key)
+
+												@foreach($key->cart as $endPoint)
+												<tr>
+													<td>
+														<div class="media">
+															<div class="card-aside-img">
+																<img src="{{URL::asset('/images/products/'. $endPoint->image_name)}}" alt="img" class="h-60 w-60">
+															</div>
+															<div class="media-body">
+																<div class="card-item-desc mt-0">
+																	<h6 class="font-weight-semibold mt-0 text-uppercase">{{$endPoint->name_product}}</h6>
+																	{{-- <dl class="card-item-desc-1">
+																		<dt>Size: </dt>
+																		<dd>XXL</dd>
+																	</dl> --}}
+																	<dl class="card-item-desc-1">
+																		<dt>Desc: </dt>
+																		<dd>{{$endPoint->description}}</dd>
+																	</dl>
+																</div>
 															</div>
 														</div>
-													</div>
-												</td>
-												<td>
-													<div class="form-group">
-														<select name="quantity" id="select-countries" class="form-control custom-select select2">
-															<option value="1" selected>1</option>
-															<option value="2">2</option>
-															<option value="3" >3</option>
-															<option value="4">4</option>
-														</select>
-													</div>
-												</td>
-												<td class="text-center text-lg text-medium">$79.90</td>
-												<td class="text-center text-lg text-medium">$35.00</td>
-												<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="card-aside-img">
-															<img src="{{URL::asset('assets/img/ecommerce/06.jpg')}}" alt="img" class="h-60 w-60">
-														</div>
-														<div class="media-body">
-															<div class="card-item-desc mt-0">
-																<h6 class="font-weight-semibold mt-0 text-uppercase">College bag</h6>
-																<dl class="card-item-desc-1">
-																  <dt>Size: </dt>
-																  <dd>XL</dd>
-																</dl>
-																<dl class="card-item-desc-1">
-																  <dt>Color: </dt>
-																  <dd>Black color</dd>
-																</dl>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="form-group d-flex justify-content-center">
+																<div class="row">
+																	<input type="hidden" class="data_item" value="{{$key->cart_id}}">
+																	<div class="col-md-3">
+																		<button class="btn btn-primary btn-block plus">Plus</button>
+																	</div>
+																	<div class="col-md-6">
+																		<input type="text" class="form-control quantity" placeholder="quantaty" name="quantaty" value="{{$key->count}}">
+																	</div>
+																	<div class="col-md-3">
+																		<button class="btn btn-danger btn-block minus">Minus</button>
+																	</div>
+																</div>
 															</div>
 														</div>
-													</div>
-												</td>
-												<td>
-													<div class="form-group">
-														<select name="quantity" id="select-countries1" class="form-control custom-select select2">
-															<option value="1" selected>1</option>
-															<option value="2">2</option>
-															<option value="3" >3</option>
-															<option value="4">4</option>
-														</select>
-													</div>
-												</td>
-												<td class="text-center text-lg text-medium">$79.90</td>
-												<td class="text-center text-lg text-medium">$35.00</td>
-												<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="card-aside-img">
-															<img src="{{URL::asset('assets/img/ecommerce/08.jpg')}}" alt="img" class="h-60 w-60">
-														</div>
-														<div class="media-body">
-															<div class="card-item-desc mt-0">
-																<h6 class="font-weight-semibold mt-0 text-uppercase">Smart Watch</h6>
-																<dl class="card-item-desc-1">
-																  <dt>Size: </dt>
-																  <dd>XL</dd>
-																</dl>
-																<dl class="card-item-desc-1">
-																  <dt>Color: </dt>
-																  <dd>LightPink color</dd>
-																</dl>
-															</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<div class="form-group">
-														<select name="quantity" id="select-countries2" class="form-control custom-select select2">
-															<option value="1" selected>1</option>
-															<option value="2">2</option>
-															<option value="3" >3</option>
-															<option value="4">4</option>
-														</select>
-													</div>
-												</td>
-												<td class="text-center text-lg text-medium">$79.90</td>
-												<td class="text-center text-lg text-medium">$35.00</td>
-												<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="card-aside-img">
-															<img src="{{URL::asset('assets/img/ecommerce/02.jpg')}}" alt="img" class="h-60 w-60">
-														</div>
-														<div class="media-body">
-															<div class="card-item-desc mt-0">
-																<h6 class="font-weight-semibold mt-0 text-uppercase">Chair</h6>
-																<dl class="card-item-desc-1">
-																  <dt>Size: </dt>
-																  <dd>11-12 inches</dd>
-																</dl>
-																<dl class="card-item-desc-1">
-																  <dt>Color: </dt>
-																  <dd>LightGray color</dd>
-																</dl>
-															</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<div class="form-group">
-														<select name="quantity" id="select-countries3" class="form-control custom-select select2">
-															<option value="1" selected>1</option>
-															<option value="2">2</option>
-															<option value="3" >3</option>
-															<option value="4">4</option>
-														</select>
-													</div>
-												</td>
-												<td class="text-center text-lg text-medium">$79.90</td>
-												<td class="text-center text-lg text-medium">$35.00</td>
-												<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
-											</tr>
+													</td>
+													<td class="text-center text-lg text-medium">{{$endPoint->price}}</td>
+													<td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="" data-original-title="Remove item"><i class="fa fa-trash"></i></a></td>
+												</tr>
+												@endforeach
+											@endforeach
+											<input name="token" type="hidden" value="{{ csrf_token() }}" class="token"/>
 										</tbody>
 									</table>
 								</div>
@@ -208,4 +115,5 @@
 <!-- Internal Nice-select js-->
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/jquery.nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/nice-select.js')}}"></script>
+<script src="{{URL::asset('assets/js/items.js')}}"></script>
 @endsection

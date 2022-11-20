@@ -2,6 +2,8 @@
 @section('css')
 <!-- Internal Nice-select css  -->
 <link href="{{URL::asset('assets/plugins/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet"/>
+<!--Internal   Notify -->
+<link href="{{URL::asset('assets/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
 @endsection
 @section('page-header')
 				<!-- breadcrumb -->
@@ -60,7 +62,7 @@
 												<a href="{{route('products.show' , $product->translation_id)}}">
 													<img class="w-100" src="{{URL::asset('/images/products/'. $product->image_name)}}" alt="product-image">
 												</a>
-												<button class="adtocart" data_product ={{ $product->translation_id }}>
+												<button class="adtocart" data_product ={{ $product->translation_id }} data_success = "{{ __('notifiy.Success')}}" data_warning = "{{ __('notifiy.Warning')}}" >
 													<input name="token" type="hidden" value="{{ csrf_token() }}" />
 													<i class="las la-shopping-cart "></i>
 												</button>
@@ -90,4 +92,8 @@
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/jquery.nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/jquery-nice-select/js/nice-select.js')}}"></script>
 <script src="{{URL::asset('assets/js/addCart.js')}}"></script>
+
+<!--Internal  Notify js -->
+<script src="{{URL::asset('assets/plugins/notify/js/notifIt.js')}}"></script>
+<script src="{{URL::asset('assets/plugins/notify/js/notifit-custom.js')}}"></script>
 @endsection

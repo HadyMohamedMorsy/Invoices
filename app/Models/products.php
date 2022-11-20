@@ -16,4 +16,5 @@ class products extends Model
 
         return $this->belongsToMany(Catagories::class, 'product_category', 'product_id', 'category_id' , 'translation_id' , 'translation_id');
     }
+
 }

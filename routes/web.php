@@ -35,9 +35,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::post('search/category' , [CatagoriesController::class , 'search']);
             Route::resource('/products' , ProductsController::class);
             Route::resource('/invoices' , InvoiceItemsController::class)->only([
-                'index', 'store'
+                'index'
             ]);
             Route::post('invoices/cart' , [InvoiceItemsController::class , 'cart']);
+            Route::post('invoices/countItems' , [InvoiceItemsController::class , 'countItems']);
         
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
