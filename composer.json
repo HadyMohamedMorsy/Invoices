@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "mcamara/laravel-localization": "^1.7",
+        "predis/predis": "^2.0",
         "stichoza/google-translate-php": "^4.1",
         "tymon/jwt-auth": "*"
     },
@@ -50,6 +51,11 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ]
     },
     "extra": {

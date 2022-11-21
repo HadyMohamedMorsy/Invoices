@@ -122,13 +122,13 @@
 																<div class="row">
 																	<input type="hidden" class="data_item" value="{{$key->cart_id}}">
 																	<div class="col-md-3">
-																		<button class="btn btn-primary btn-block plus">Plus</button>
+																		<span class="btn btn-primary btn-block plus">Plus</span>
 																	</div>
 																	<div class="col-md-6">
 																		<input type="text" class="form-control quantity" placeholder="quantaty" value="{{$key->count}}">
 																	</div>
 																	<div class="col-md-3">
-																		<button class="btn btn-danger btn-block minus">Minus</button>
+																		<span class="btn btn-danger btn-block minus">Minus</span>
 																	</div>
 																</div>
 															</div>
@@ -153,11 +153,9 @@
 								<div class="shopping-cart-footer">
 									<div class="column"><a class="btn btn-secondary" href="{{ route('products.index') }}">Back to Shopping</a></div>
 									<div class="column">
-										<a class="btn btn-success" href="{{ route('Checkout') }}"
-										onclick="event.preventDefault();
-												document.getElementById('Checkout').submit();">
+										<button class="btn btn-success" type="submit">
 												Checkout
-										</a>
+										</button>
 										<input type="hidden" name="Checkout" class="Checkout">
 										<input type="hidden" name="type_status" value="{{ $typeStatusPayment->payment_status }}">
 									</div>

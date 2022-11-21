@@ -27,6 +27,7 @@
 				@include('layouts.sidebar')
 				@include('layouts.models')
             	@include('layouts.footer')
-				@include('layouts.footer-scripts')	
+				@include('layouts.footer-scripts')
+		<script href="{{asset('assets/js/soket.js')}}" rel="stylesheet"></script>
 	</body>
 </html>
