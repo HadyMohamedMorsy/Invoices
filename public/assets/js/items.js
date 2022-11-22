@@ -1,7 +1,9 @@
 
 let UrlSystem = window.location.href;
-let getHref = UrlSystem.split("invoices");
+let getHref = UrlSystem.split("invoiceItems");
 let token = document.querySelector('.token');
+
+
 
 const TIMEOUT_SEC = 90;
 
@@ -26,11 +28,11 @@ async function changing(self, token ,errorMsg = "Something went wrong 💥💥")
     
     try {
 
-    const fetchData = fetch(getHref[0] + "invoices/countItems", {
+    const fetchData = fetch(getHref[0] + "invoiceItems/countItems", {
         method: "POST", // or 'PUT'
         headers: {
-            "Content-Type":"application/json",
-            "X-CSRF-TOKEN":token.value,
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": token.value,
         },
         body: JSON.stringify(dataForm),
     });
@@ -70,7 +72,7 @@ async function DeleteItem(self, token ,errorMsg = "Something went wrong 💥💥
     };
 
     try {
-        const fetchData = fetch(getHref[0] + "invoices/DeleteItem", {
+        const fetchData = fetch(getHref[0] + "invoiceItems/DeleteItem", {
             method: "POST", // or 'PUT'
             headers: {
                 "Content-Type": "application/json",

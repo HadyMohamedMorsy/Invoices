@@ -4,6 +4,8 @@ let addToCart = document.querySelectorAll(".adtocart");
 let UrlSystem = window.location.href;
 let getHref = UrlSystem.split("products");
 
+console.log(getHref);
+
 
 const TIMEOUT_SEC = 90;
 
@@ -26,11 +28,11 @@ async function changing(self, icon, errorMsg = "Something went wrong 💥💥") 
     };
     
     try {
-    const fetchData = fetch(getHref[0] + "invoices/cart", {
+    const fetchData = fetch(getHref[0] + "invoiceItems/cart", {
         method: "POST", // or 'PUT'
         headers: {
-            "Content-Type":"application/json",
-            "X-CSRF-TOKEN":self.firstElementChild.value,
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": self.firstElementChild.value,
         },
         body: JSON.stringify(dataForm),
     });
