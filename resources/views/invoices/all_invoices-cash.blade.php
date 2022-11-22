@@ -44,6 +44,7 @@
 												<th>total_invoice</th>
 												<th>total</th>
 												<th>tax</th>
+												<th colspan="2" class="text-center">Actions</th>
 												<th>created_at</th>
 												<th>updated_at</th>
 											</tr>
@@ -66,6 +67,15 @@
 													<td>{{ $invoice->total_invoice }}</td>
 													<td>{{ $invoice->total }}</td>
 													<td>{{ $invoice->tax }}</td>
+													<td colspan="2">
+														<a href="{{ route('invoice.show' , $invoice->id) }}"  class="btn btn-secondary">Show</a>
+														<a href="" class="btn btn-success"> Edit </a>
+														<form action="" method="POST" class="Delete-form">
+															@csrf
+															{{ method_field('DELETE') }}
+															<button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete </button>
+														</form>
+													</td>
 													<td>{{ $invoice->created_at }}</td>
 													<td>{{ $invoice->updated_at }}</td>
 												</tr>

@@ -30,3 +30,9 @@
     <!---Skinmodes css-->
     <link href="{{URL::asset('assets/css/skin-modes.css')}}" rel="stylesheet">
 @endif
+
+<style>
+    .Delete-form{
+        display: inline-block;
+    }
+</style>

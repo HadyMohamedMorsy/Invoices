@@ -9,31 +9,6 @@
 							<h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Invoice</span>
 						</div>
 					</div>
-					<div class="d-flex my-xl-auto right-content">
-						<div class="pr-1 mb-3 mb-xl-0">
-							<button type="button" class="btn btn-info btn-icon ml-2"><i class="mdi mdi-filter-variant"></i></button>
-						</div>
-						<div class="pr-1 mb-3 mb-xl-0">
-							<button type="button" class="btn btn-danger btn-icon ml-2"><i class="mdi mdi-star"></i></button>
-						</div>
-						<div class="pr-1 mb-3 mb-xl-0">
-							<button type="button" class="btn btn-warning  btn-icon ml-2"><i class="mdi mdi-refresh"></i></button>
-						</div>
-						<div class="mb-3 mb-xl-0">
-							<div class="btn-group dropdown">
-								<button type="button" class="btn btn-primary">14 Aug 2019</button>
-								<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<span class="sr-only">Toggle Dropdown</span>
-								</button>
-								<div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuDate" data-x-placement="bottom-end">
-									<a class="dropdown-item" href="#">2015</a>
-									<a class="dropdown-item" href="#">2016</a>
-									<a class="dropdown-item" href="#">2017</a>
-									<a class="dropdown-item" href="#">2018</a>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 				<!-- breadcrumb -->
 @endsection
@@ -66,7 +41,7 @@
 										<div class="col-md">
 											<label class="tx-gray-600">Invoice Information</label>
 											<p class="invoice-info-row"><span>Invoice No</span> <span>GHT-673-00</span></p>
-											<p class="invoice-info-row"><span>Project ID</span> <span>32334300</span></p>
+											<p class="invoice-info-row"><span>type</span> <span>cash</span></p>
 											<p class="invoice-info-row"><span>Issue Date:</span> <span>November 21, 2017</span></p>
 											<p class="invoice-info-row"><span>Due Date:</span> <span>November 30, 2017</span></p>
 										</div>
@@ -75,7 +50,7 @@
 										<table class="table table-invoice border text-md-nowrap mb-0">
 											<thead>
 												<tr>
-													<th class="wd-20p">Type</th>
+													<th class="wd-20p">Product</th>
 													<th class="wd-40p">Description</th>
 													<th class="tx-center">QNTY</th>
 													<th class="tx-right">Unit Price</th>
@@ -83,58 +58,10 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>Website Design</td>
-													<td class="tx-12">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam...</td>
-													<td class="tx-center">2</td>
-													<td class="tx-right">$150.00</td>
-													<td class="tx-right">$300.00</td>
-												</tr>
-												<tr>
-													<td>Firefox Plugin</td>
-													<td class="tx-12">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque...</td>
-													<td class="tx-center">1</td>
-													<td class="tx-right">$1,200.00</td>
-													<td class="tx-right">$1,200.00</td>
-												</tr>
-												<tr>
-													<td>iPhone App</td>
-													<td class="tx-12">Et harum quidem rerum facilis est et expedita distinctio</td>
-													<td class="tx-center">2</td>
-													<td class="tx-right">$850.00</td>
-													<td class="tx-right">$1,700.00</td>
-												</tr>
-												<tr>
-													<td>Android App</td>
-													<td class="tx-12">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut</td>
-													<td class="tx-center">3</td>
-													<td class="tx-right">$850.00</td>
-													<td class="tx-right">$2,550.00</td>
-												</tr>
-												<tr>
-													<td class="valign-middle" colspan="2" rowspan="4">
-														<div class="invoice-notes">
-															<label class="main-content-label tx-13">Notes</label>
-															<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-														</div><!-- invoice-notes -->
-													</td>
-													<td class="tx-right">Sub-Total</td>
-													<td class="tx-right" colspan="2">$5,750.00</td>
-												</tr>
-												<tr>
-													<td class="tx-right">Tax (5%)</td>
-													<td class="tx-right" colspan="2">$287.50</td>
-												</tr>
-												<tr>
-													<td class="tx-right">Discount</td>
-													<td class="tx-right" colspan="2">-$50.00</td>
-												</tr>
-												<tr>
-													<td class="tx-right tx-uppercase tx-bold tx-inverse">Total Due</td>
-													<td class="tx-right" colspan="2">
-														<h4 class="tx-primary tx-bold">$5,987.50</h4>
-													</td>
-												</tr>
+													<tr>
+														<td class="tx-center"> Helo</td>
+														<td class="tx-right">Hello </td>
+													</tr>
 											</tbody>
 										</table>
 									</div>

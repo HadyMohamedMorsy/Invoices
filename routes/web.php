@@ -38,23 +38,26 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::resource('/products' , ProductsController::class);
 
             // Controller InvoiceItems
-            Route::resource('/invoices' , InvoiceItemsController::class)->only([
+            Route::resource('invoiceItems' , InvoiceItemsController::class)->only([
                 'index'
             ]);
-            Route::post('invoices/cart' , [InvoiceItemsController::class , 'cart']);
-            Route::post('invoices/countItems' , [InvoiceItemsController::class , 'countItems']);
-            Route::post('invoices/clear' , [InvoiceItemsController::class , 'ClearCart'])->name('clear.ClearCart');
-            Route::post('invoices/checkout' , [InvoiceItemsController::class , 'Checkout'])->name('Checkout');
-            Route::post('invoices/DeleteItem' , [InvoiceItemsController::class , 'DeleteItem'])->name('DeleteItem');
+            Route::post('invoiceItems/cart' , [InvoiceItemsController::class , 'cart'])->name('cart');
+            Route::post('invoiceItems/countItems' , [InvoiceItemsController::class , 'countItems'])->name('countItems');
+            Route::post('invoiceItems/clear' , [InvoiceItemsController::class , 'ClearCart'])->name('clear.ClearCart');
+            Route::post('invoiceItems/checkout' , [InvoiceItemsController::class , 'Checkout'])->name('Checkout');
+            Route::post('invoiceItems/DeleteItem' , [InvoiceItemsController::class , 'DeleteItem'])->name('DeleteItem');
 
-            
             // Controller InvoicesController
-            Route::get('invoicesItems/install' , [InvoicesController::class , 'installments'])->name('installments');
-            Route::resource('invoicesItems' , InvoicesController::class);
+            Route::resource('invoice' , InvoicesController::class);
+            Route::get('installinstallments' , [InvoicesController::class , 'installments'])->name('installments');
+            Route::get('cashing' , [InvoicesController::class , 'cash'])->name('cashing');
+        
+            // Controller invoice
 
 
             // controller Contacts
             Route::resource('/contacts' , ChatsController::class);
+
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
     });

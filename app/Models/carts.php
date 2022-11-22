@@ -18,7 +18,6 @@ class carts extends Model
     }
 
     public function cart(){
-        
         return $this->hasMany(products::class, 'translation_id' , 'cart_id');
     }
 

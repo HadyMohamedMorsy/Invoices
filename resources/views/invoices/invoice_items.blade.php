@@ -158,6 +158,7 @@
 										</button>
 										<input type="hidden" name="Checkout" class="Checkout">
 										<input type="hidden" name="type_status" value="{{ $typeStatusPayment->payment_status }}">
+										<input type="hidden" name="variations" value="{{ implode(',', $Variations) }}">
 									</div>
 								</div>
 							</div>

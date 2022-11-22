@@ -39,11 +39,18 @@ class InvoiceItemsController extends Controller
     {
         $TypePayment = types::where('lang_id' ,$this->GetIdLang())->get();
         $typeStatusPayment = case_payment::where('lang_id' ,$this->GetIdLang())->first();
+        
         $items =  carts::with(['cart' => function($q){
             $q->where('lang_id' , $this->GetIdLang());
         }])->get();
 
-        return view('invoices.invoice_items' , compact('items' , 'TypePayment' , 'typeStatusPayment'));
+        $Variations = array();
+
+        foreach($items as $item){
+            $Variations[] = $item->id;
+        }
+
+        return view('invoices.invoice_items' , compact('items' , 'TypePayment' , 'typeStatusPayment' , 'Variations'));
     }
 
 
@@ -59,11 +66,8 @@ class InvoiceItemsController extends Controller
             'total' => $request->subtotal
         ]);
         if($checkUpdate){
-
             return  response()->json($Success , 200);
-
         }else{
-
             return  response()->json($Error , 404);
         }
     }
@@ -98,6 +102,9 @@ class InvoiceItemsController extends Controller
 
      public function Checkout(Request $request){
 
+       $variations = $request->variations;
+       $arrayvariations = explode(',',$variations);
+
         invoices::create([
             'number_invoice' => $request->invoice_number,
             'status'         => $request->type_status,
@@ -105,9 +112,10 @@ class InvoiceItemsController extends Controller
             'type'           => $request->Type_Payment,
             'total_invoice'  => $request->Checkout,
             'total'          => $request->Checkout,
+            'product_id'     => json_encode($arrayvariations)
         ]);
 
-        return redirect('/invoicesItems')->with("success","This catagories Is Added");
+        return redirect('/invoiceItems')->with("success","This catagories Is Added");
         
      }
 
