@@ -9,15 +9,34 @@
 <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
 @section('page-header')
-				<!-- breadcrumb -->
-				<div class="breadcrumb-header justify-content-between">
-					<div class="my-auto">
-						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">Tables</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Data Tables</span>
-						</div>
-					</div>
+		<!-- breadcrumb -->
+		<div class="breadcrumb-header justify-content-between">
+			<div class="my-auto">
+				<div class="d-flex">
+					<h4 class="content-title mb-0 my-auto">Tables</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Data Tables</span>
 				</div>
-				<!-- breadcrumb -->
+			</div>
+		</div>
+
+		@if (Session::has('success'))
+			<div class="alert alert-success">
+				{!! Session::get('success') !!}
+			</div>
+		@endif
+
+		@if (Session::has('updated'))
+			<div class="alert alert-success">
+				{!! Session::get('updated') !!}
+			</div>
+		@endif
+
+		@if (Session::has('Deleted'))
+			<div class="alert alert-success">
+				{!! Session::get('Deleted') !!}
+			</div>
+		@endif
+		<!-- breadcrumb -->
+
 @endsection
 @section('content')
 				<!-- row opened -->

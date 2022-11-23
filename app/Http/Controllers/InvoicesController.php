@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\invoices;
 use App\Models\carts;
+use App\Models\Languages;
 use Illuminate\Http\Request;
 
 use App\Traits\UploadFileTrait;
@@ -62,17 +63,20 @@ class InvoicesController extends Controller
      */
     public function show($id)
     {
-      $invoices =  invoices::where('id',$id)->where('type' , "cash")->orWhere('type' , "كاش")->first();
-      $VarMultiID =  json_decode($invoices->product_id , true);
-      $GetCarts = array();
+        $invoices =  invoices::where('id',$id)->where('type' , "cash")->orWhere('type' , "كاش")->first();
 
-      foreach($VarMultiID as  $id){
-        $GetCarts[] = (int) $id;
-      }
-      return $GetCarts;
-      
-      // Get Items To Checkout   
-      return view('invoices.invoice_total' , compact('invoices'));
+        if($invoices->status == "Not_Payment"){
+
+            $carts = $items =  carts::with('cart')->where('invoice_NO',$invoices->number_invoice)->get();
+
+        }else{
+
+            $carts = $items =  carts::with('cart')->where('invoice_NO',$invoices->number_invoice)->onlyTrashed()->get();
+        }
+
+        $Languages = Languages::get();
+        // Get Items To Checkout   
+        return view('invoices.invoice_total' , compact('invoices' , 'carts' , 'Languages'));
     }
 
     /**
@@ -118,7 +122,38 @@ class InvoicesController extends Controller
     public function cash()
     {
         $invoices =  invoices::where('type' , "cash")->orWhere('type' , "كاش")->get();
+
         return view('invoices.all_invoices-cash' , compact('invoices'));
+    }
+
+    public function payInvoice(Request $request){
+
+        $invoices =  invoices::where('status' , 'Not_Payment')->first();
+
+        $invoices->update([
+
+            'status' => 'Completed'
+        ]);
+
+        $carts = carts::where('invoice_NO',$request->number_invoice)->get();
+
+        if($carts){
+            
+            foreach($carts as $cart){
+    
+                $cart->delete();
+            }
+        }
+
+        if($invoices->type == "cash" || "كاش"){
+
+            return redirect('/cashing')->with("success","This Invoices Is Payed");
+
+        }else{
+            
+            return redirect('/installinstallments')->with("success","This Invoices Is Payed");
+        }
+
     }
 }
 

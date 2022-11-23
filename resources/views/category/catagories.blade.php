@@ -15,21 +15,21 @@
 				<!-- breadcrumb -->
 
 
-				@if (\Session::has('success'))
+				@if (Session::has('success'))
 					<div class="alert alert-success">
-						{!! \Session::get('success') !!}
+						{!! Session::get('success') !!}
 					</div>
 				@endif
 
-				@if (\Session::has('updated'))
+				@if (Session::has('updated'))
 					<div class="alert alert-success">
-						{!! \Session::get('updated') !!}
+						{!! Session::get('updated') !!}
 					</div>
 				@endif
 
-				@if (\Session::has('Deleted'))
+				@if (Session::has('Deleted'))
 					<div class="alert alert-success">
-						{!! \Session::get('Deleted') !!}
+						{!! Session::get('Deleted') !!}
 					</div>
 				@endif
 

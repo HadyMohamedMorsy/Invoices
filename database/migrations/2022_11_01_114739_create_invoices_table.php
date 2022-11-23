@@ -16,16 +16,18 @@ return new class extends Migration
         Schema::create('Invoices', function (Blueprint $table) {
             $table->id();
             $table->string('number_invoice');
-            $table->string('status' , 20);
-            $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('status' , 20)->default('Not_Payment');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('name_client' , 90);
+            $table->string('phone' , 11);
             $table->string('type' , 30);
-            $table->decimal('total_invoice');
-            $table->decimal('total');
+            $table->string('total_invoice');
+            $table->string('total');
             $table->integer('tax')->default(5);
             $table->decimal('presenter')->nullable();
             $table->integer('years')->nullable();
-            $table->decimal('total_pay')->nullable();
+            $table->string('total_pay')->nullable();
             $table->timestamps();
         });
     }

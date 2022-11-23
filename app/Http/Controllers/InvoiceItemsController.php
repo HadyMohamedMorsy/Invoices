@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Models\carts;
 use App\Models\types;
-use App\Models\case_payment;
 use App\Models\products;
 use App\Models\invoices;
 use Illuminate\Http\Request;
@@ -16,6 +15,8 @@ use App\Traits\LanguagesTrait;
 use App\Traits\TranslateAutoTrait;
 
 use LaravelLocalization;
+
+use function PHPUnit\Framework\isEmpty;
 
 class InvoiceItemsController extends Controller
 {
@@ -38,19 +39,14 @@ class InvoiceItemsController extends Controller
     public function index()
     {
         $TypePayment = types::where('lang_id' ,$this->GetIdLang())->get();
-        $typeStatusPayment = case_payment::where('lang_id' ,$this->GetIdLang())->first();
         
         $items =  carts::with(['cart' => function($q){
+
             $q->where('lang_id' , $this->GetIdLang());
+            
         }])->get();
 
-        $Variations = array();
-
-        foreach($items as $item){
-            $Variations[] = $item->id;
-        }
-
-        return view('invoices.invoice_items' , compact('items' , 'TypePayment' , 'typeStatusPayment' , 'Variations'));
+        return view('invoices.invoice_items' , compact('items' , 'TypePayment'));
     }
 
 
@@ -62,12 +58,17 @@ class InvoiceItemsController extends Controller
         $CartItem  = carts::where("cart_id" , $request->cart_id )->where("user_id", Auth::user()->id)->first();
 
        $checkUpdate =  $CartItem->update([
+
             'count' => $request->count,
             'total' => $request->subtotal
+
         ]);
         if($checkUpdate){
+
             return  response()->json($Success , 200);
+
         }else{
+
             return  response()->json($Error , 404);
         }
     }
@@ -96,30 +97,91 @@ class InvoiceItemsController extends Controller
      }
 
      public function ClearCart(){
+
         carts::truncate();
+
         return view('Home.index');
+
      }
 
      public function Checkout(Request $request){
 
-       $variations = $request->variations;
-       $arrayvariations = explode(',',$variations);
+        $getPayStatus = invoices::orderBy('id', 'desc')->first();
 
-        invoices::create([
+        $carts =  carts::where('invoice_NO', NULL)->get();
+
+        
+        if($getPayStatus){
+
+            if($getPayStatus->status == "Not_Payment"){
+
+                $Updated =  $getPayStatus->update([
+                    'name_client'    => $request->name_client,
+                    'phone'          => $request->number_phone,
+                    'total_invoice'  => $request->Checkout,
+                    'total'          => $request->Checkout,
+                ]);
+
+                if($carts){
+                    foreach ($carts as $cart) {
+                        $cart->update([
+                            'invoice_NO' => $request->invoice_number
+                        ]);
+                    }
+                }
+
+                if($Updated){
+
+                    if($request->Type_Payment == 'cash' || $request->Type_Payment == 'كاش' ) {
+
+                        return redirect('/cashing')->with("updated","This Invoices Is updated");
+
+                    }else{
+
+                        return redirect('/installinstallments')->with("updated","This Invoices Is updated");
+                    }
+                }
+            }
+        }
+
+        $Added = invoices::create([
+
             'number_invoice' => $request->invoice_number,
-            'status'         => $request->type_status,
-            'client_id'      => Auth::user()->id,
+            'employee_id'    => Auth::user()->id,
+            'name_client'    => $request->name_client,
+            'phone'          => $request->number_phone,
             'type'           => $request->Type_Payment,
             'total_invoice'  => $request->Checkout,
             'total'          => $request->Checkout,
-            'product_id'     => json_encode($arrayvariations)
+
         ]);
 
-        return redirect('/invoiceItems')->with("success","This catagories Is Added");
-        
-     }
+        if($carts){
 
-     public function DeleteItem(Request $request){
+            foreach ($carts as $cart) {
+
+                $cart->update([
+
+                    'invoice_NO' => $request->invoice_number
+                ]);
+            } 
+        }
+
+        if($Added){
+
+            if($request->Type_Payment == 'cash' || $request->Type_Payment == 'كاش' ) {
+
+                return redirect('/cashing')->with("success","This Invoices Is Added");
+
+            }else{
+
+                return redirect('/installinstallments')->with("success","This Invoices Is Added");
+            }
+        }
+
+    }
+
+    public function DeleteItem(Request $request){
 
         $Success = ['Success' => 'Your Product is Deleted On Your Cart'];
 
@@ -129,5 +191,5 @@ class InvoiceItemsController extends Controller
 
         return  response()->json($Success , 201);
 
-     }
+    }
 }

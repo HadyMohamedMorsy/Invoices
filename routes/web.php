@@ -51,6 +51,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::resource('invoice' , InvoicesController::class);
             Route::get('installinstallments' , [InvoicesController::class , 'installments'])->name('installments');
             Route::get('cashing' , [InvoicesController::class , 'cash'])->name('cashing');
+            Route::PUT('payInvoice' , [InvoicesController::class , 'payInvoice'])->name('payInvoice');
         
             // Controller invoice
 

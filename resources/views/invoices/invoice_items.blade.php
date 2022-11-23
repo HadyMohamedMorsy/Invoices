@@ -56,6 +56,18 @@
 											@endforeach
 										</select>
 									</div>
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label> Name Of Client </label>
+											<input class="form-control" type="text" placeholder="Name"  name="name_client">
+										</div>	
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label> Number phone </label>
+											<input class="form-control" type="text" placeholder="Number phone"  name="number_phone">
+										</div>	
+									</div>
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label> Note </label>
@@ -157,8 +169,6 @@
 												Checkout
 										</button>
 										<input type="hidden" name="Checkout" class="Checkout">
-										<input type="hidden" name="type_status" value="{{ $typeStatusPayment->payment_status }}">
-										<input type="hidden" name="variations" value="{{ implode(',', $Variations) }}">
 									</div>
 								</div>
 							</div>

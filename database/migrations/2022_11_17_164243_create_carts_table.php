@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('count')->default(1);
             $table->integer('total');
+            $table->softDeletes();
+            $table->string('invoice_NO' , 12)->nullable();
             $table->timestamps();
         });
     }
