@@ -8,6 +8,8 @@ use App\Http\Controllers\CatagoriesController;
 use App\Http\Controllers\InvoiceItemsController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\Gettheme;
 
 
@@ -58,6 +60,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
 
             // controller Contacts
             Route::resource('/contacts' , ChatsController::class);
+            Route::resource('/Roles' , RolesController::class);
+            Route::resource('/permissions' , permissionsController::class);
 
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
