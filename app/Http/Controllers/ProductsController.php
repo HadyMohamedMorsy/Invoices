@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
+// models
 use App\Models\products;
 use App\Models\Catagories;
 use App\Models\Languages;
+
+
 use Illuminate\Http\Request;
 
+
+// Traits
 use App\Traits\UploadFileTrait;
 use App\Traits\LanguagesTrait;
 use App\Traits\TranslateAutoTrait;
 
+// Google Translate
 use Stichoza\GoogleTranslate\GoogleTranslate;
-use LaravelLocalization;
+
 
 class ProductsController extends Controller
 {
@@ -24,11 +30,9 @@ class ProductsController extends Controller
 
     //upload File
     use UploadFileTrait;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    
+
     public function index()
     {
         $this->TranslateAutoCatTrait('products');
@@ -42,11 +46,7 @@ class ProductsController extends Controller
         return view('products.products' , compact(['catagoriesProduct' , 'products']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
 
@@ -103,12 +103,6 @@ class ProductsController extends Controller
 
         }   
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\products  $products
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $showProduct =  products::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
@@ -116,35 +110,16 @@ class ProductsController extends Controller
         return view('products.show' , compact('showProduct'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\products  $products
-     * @return \Illuminate\Http\Response
-     */
     public function edit(products $products)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\products  $products
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, products $products)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\products  $products
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(products $products)
     {
         //
