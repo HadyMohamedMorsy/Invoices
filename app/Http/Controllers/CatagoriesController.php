@@ -2,20 +2,37 @@
 
 namespace App\Http\Controllers;
 
+//Actions
+use App\Http\Controllers\Actions\catagories\ActionCatagories;
+use App\Http\Controllers\Actions\catagories\ActionsCatagoriesStore;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesShow;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesUpdate;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesDestroy;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesMulti;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesMultiUpdate;
+use App\Http\Controllers\Actions\catagories\ActionCatagoriesSearch;
+
+// Models
 use App\Models\Catagories;
-use App\Models\products;
+use App\Http\Requests\Catagories\Multicatagory;
 use App\Models\Languages;
 
+//Requests
+use App\Http\Requests\Catagories\StoreCatagoriesRequest;
+use App\Http\Requests\Catagories\UpdateCatagories;
+use App\Http\Requests\Catagories\MultiUpdate;
+
+// Request Fields
 use Illuminate\Http\Request;
+
+// Traits
 use App\Traits\UploadFileTrait;
 use App\Traits\LanguagesTrait;
 use App\Traits\TranslateAutoTrait;
 
-use JetBrains\PhpStorm\Language;
+
+//Google Translate Library
 use Stichoza\GoogleTranslate\GoogleTranslate;
-
-
-use LaravelLocalization;
 
 
 class CatagoriesController extends Controller
@@ -30,101 +47,60 @@ class CatagoriesController extends Controller
     //upload File
     use UploadFileTrait;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
 
-    public function index()
+    public function index(ActionCatagories $GetCatagories)
     {
-
+        // Translate Automatic When User Added Language More Like Ar , En , Fr
         $this->TranslateAutoCatTrait('Catagories');
 
-        $Catagories =  Catagories::where('lang_id', $this->GetIdLang())->paginate(6);
+        // GetCatagories Related Current Languages
+        $Catagories =  $GetCatagories->GetCatagories();
 
         return view('category.catagories' , compact('Catagories'));
-
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('category.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreCatagoriesRequest $request , ActionsCatagoriesStore $SetCatagories)
     {
-        
-        $validated = $request->validate([
-            $this->GetValidInputLang('name_cat')  =>   'required|unique:catagories,name_cat|max:50',
-            'file'                                =>   'required|max:10000|mimes:pdf,png,jpg',
-        ]);
-
         if($request->file){
-    
-            $name_image = $this->GetFile($request->file);
+            
+            // Store Catagories
+            $SetCatagories->SetCatagories($request);
 
-            foreach($this->LanguagesCount() as $key){
-                
-                $tr = new GoogleTranslate($key->Language_name); // Translates into English
-                
-                Catagories::create([
-                    'name_cat'            => $tr->translate($request[$this->GetValidInputLang('name_cat')]),
-                    'lang_id'             => $key->id,
-                    'image_name'          => $name_image,
-                    'translation_id'      => $request->translation_id,
-                ]);
-                
-            }
-
-            $this->UploadFile($request->file , 'images/Catagories' , $name_image);
 
             return redirect('/catagories')->with("success","This catagories Is Added");
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Catagories  $catagories
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+    public function show($id , ActionCatagoriesShow $showCategories)
+
     {
-        $catagoriesProduct =  Catagories::with(['pro' => function($q){
-            $q->where('lang_id' , $this->GetIdLang());
-        }])->where('lang_id' , $this->GetIdLang() )->get();
+        //Show Catagories With Products Related 
+        $GetCatagoriesRelatedProducts =  $showCategories->ShowCatagoriesRelatedProducts($id);
 
-        $count = [];
+        // define Variable Empty Array To Get Products Only 
+        $products = [];
 
-        foreach ($catagoriesProduct as $key) {
+        foreach ($GetCatagoriesRelatedProducts as $key) {
 
-            $counts = $key->pro;
+            // Get Products
+            $products = $key->pro;
         }
 
-        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
+        // Get Current Category Then I cached My Products Related This Category And Category
+        $showCategory =  $showCategories->GetCatagories($id);
 
-        return view('category.show' , compact(['showCategory' , 'counts']));
+        return view('category.show' , compact(['showCategory' , 'products']));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Catagories  $catagories
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang())->first();
@@ -132,133 +108,56 @@ class CatagoriesController extends Controller
         return view('category.edit' , compact('showCategory'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Catagories  $catagories
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request , $id){
+    public function update(UpdateCatagories $request , $id , ActionCatagoriesUpdate $Update){
 
+        // Request Update With validation Update Single Current Category Related Current Languages 
 
-        $showCategory =  Catagories::where('translation_id' , $id)->where('lang_id' , $this->GetIdLang());
-
-        $TakeImage =  $showCategory->first()->image_name;
-
-
-        $file_path = public_path().'/images/Catagories/'.$TakeImage;
-
-
-        // Uploaded The Image On The system 
-        $name_image = $this->GetFile($request->file);
-
-
-        if($file_path) {
-
-            unlink($file_path);
-        }
-
-
-       $oldImages =  Catagories::where('translation_id' , $id)->get();
-
-        foreach ($oldImages as $img) {
-
-            Catagories::where('translation_id' , $img->translation_id)->where('lang_id' , $img->lang_id)
-            ->update([
-                'image_name' => $name_image
-            ]);
-        }
-
-        $showCategory->update([
-            'name_cat'      => $request[$this->GetValidInputLang('name_cat')],
-            'image_name'    => $name_image, 
-        ]);
-
-
-        $this->UploadFile($request->file , 'images/Catagories' , $name_image);
+        // I Have Problem Validation Unique Id I will Return Later 
+        $Update->ActionCatagoriesUpdate($request , $id);
 
         return redirect('/catagories')->with("updated","This catagories Is updated");
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Catagories  $catagories
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($translation_id){
 
-        $showCategory =  Catagories::where('translation_id' , $translation_id);
+    public function destroy($id , ActionCatagoriesDestroy $DeleteCategory){
 
-        $TakeImage =  $showCategory->first()->image_name;
-
-        $file_path = public_path().'/images/Catagories/'.$TakeImage;
-
-        if($file_path) {
-
-            unlink($file_path); //delete from storage
-        }
-
-        $GetCatagories =  Catagories::where('translation_id' , $translation_id)->get();
-
-        foreach ($GetCatagories as $category) {
-            
-            $category->delete();
-        }
+        // DeleteCategory All Languages With us 
+        $DeleteCategory->DestroyCategory($id);
 
         return redirect('/catagories')->with("Deleted","This catagories Is Deleted");
 
         
     }
 
-    public function multi(Request $request) {
+    public function multi(Multicatagory $request , ActionCatagoriesMulti $multi) {
+
         if($request->file){
 
-
-        foreach($this->LanguagesCount() as $key){
-
-            $validFiled = 'name_cat_'.$key->Language_name;
-
-            $validated = $request->validate([
-
-                $validFiled         =>   'required|unique:catagories,name_cat|max:50',
-                'file'              => 'required|max:10000|mimes:pdf,png,jpg',
-            ]);
-        }
-
-        // Uploaded The Image On The system 
-            $name_image = $this->GetFile($request->file);
-
-            
-            foreach($this->LanguagesCount() as $key){
-                
-                $RequestFiledLang = 'name_cat_'.$key->Language_name;
-                
-                Catagories::create([
-                    'name_cat'            => $request[$RequestFiledLang],
-                    'lang_id'             => $key->id,
-                    'image_name'          => $name_image,
-                    'translation_id'      => $request->translation_id,
-                ]);
-            }
-
-            $this->UploadFile($request->file , 'images/Catagories' , $name_image);
-
+            // Store Catagories DataBase Multi Dynamic Request 
+            $multi->ActionCatagoriesMulti($request);
+        
             return redirect('/catagories')->with("success","This catagories Is Added");
         }
     }
 
-    public function search(Request $request){
+    public function multiUpdate(MultiUpdate $request , $id , ActionCatagoriesMultiUpdate $UpdateMulti){
 
-        $query = $request->search;
+        // Request Update With validation Update Single Current Category Related Current Languages 
+
+        // I Have Problem Validation Unique Id I will Return Later 
+
+        $UpdateMulti->UpdateManyCatagoriesLanguage($request , $id);
+
+        return redirect('/catagories')->with("success","This catagories Is Added");
         
-        $Lang = $request->Lang;
+    }
 
-        $LangId =  Languages::where('Language_name' , $Lang)->first();
+    public function search(Request $request , ActionCatagoriesSearch $search){
 
-        $Catagories =  Catagories::where('name_cat' , 'LIKE' , '%'.$request->search.'%')->where('lang_id' ,  $LangId->id)->get();
+
+        // Search About Catagories 
+        $Catagories =  $search->search($request);
 
         return view('category.search' , compact('Catagories'));
 

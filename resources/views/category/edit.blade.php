@@ -21,6 +21,14 @@
 					</div>
 				</div>
 				<!-- breadcrumb -->
+
+				<!-- breadcrumb -->
+				<div class="dropdown mb-3 save-data">
+					<button aria-expanded="false" aria-haspopup="true" class="btn ripple button-saving  btn-primary" data-toggle="dropdown" id="dropdownMenuButton" type="button"> Auto translate when save Your data <i class="fas fa-caret-down ml-1"></i></button>
+					<div  class="dropdown-menu tx-13">
+						<a class="dropdown-item" href="#" data-auto="noAuto">No Auto Translate When Save Your data</a>
+					</div>
+				</div>
 @endsection
 @section('content')
 				<!-- row -->
@@ -42,6 +50,11 @@
 											<div>
 												<h6 class="card-title mb-1">{{ __('categories.File Upload') }}</h6>
 												<p class="text-muted card-sub-title">{{ __('categories.u must upload format your JPG/PNG/PDF') }}</p>
+											</div>
+											<div class="row mb-4">
+												<div class="col-lg-12">
+													<img src="{{URL::asset('images/Catagories/'.$showCategory->image_name)}}" alt="" class="img-thumbnail rounded" style="height: 250px">
+												</div>
 											</div>
 											<div class="row mb-4">
 												<div class="col-lg-12">
@@ -96,4 +109,64 @@
 <script src="{{URL::asset('assets/js/Regular.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/telephoneinput.js')}}"></script>
 <script src="{{URL::asset('assets/plugins/telephoneinput/inttelephoneinput.js')}}"></script>
+
+<script>
+	
+	TakeSelectingElement("text");
+
+	let saveData = document.querySelector(".save-data");
+
+	saveData.addEventListener("click", (e) => {
+
+		const target = e.target.closest(".dropdown-item");
+
+		let button = document.querySelector(".button-saving");
+
+		if (!target) return;
+
+		let formApplication = getElementBySelecting(`.${generateConfig(config,'form')}`);
+
+		if(target.dataset.auto == "noAuto"){
+
+			target.dataset.auto= "Auto" ;
+
+			button.innerHTML = "Auto Translate When Save Your data";
+
+			WorkingFunctionTranslation("name", "label", "text");
+			
+			formApplication.removeAttribute('action');
+
+			let IdCatagory = window.location.href;
+			
+			let Get = IdCatagory.split('/');
+
+			console.log(Get);
+			
+			
+			formApplication.setAttribute('action',`http://127.0.0.1:8000/en/multi/update/${Get[Get.length - 2]}`);
+
+
+		}else{
+
+			target.dataset.auto = "noAuto";
+			
+			button.innerHTML = "No Auto Translate When Save Your data";
+			
+			WorkingFunctionTranslationDeleting("name", "label", "text");
+
+			formApplication.removeAttribute('action');
+
+			let IdCatagory = window.location.href;
+			
+			let Get = IdCatagory.split('/');
+
+			console.log(Get);
+
+
+			formApplication.setAttribute('action' , `http://127.0.0.1:8000/en/catagories/update/${Get[Get.length - 2]}`);
+
+		}
+		
+	}); 
+</script>
 @endsection

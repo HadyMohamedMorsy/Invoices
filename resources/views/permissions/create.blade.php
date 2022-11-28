@@ -51,7 +51,7 @@
                                     <thead>
                                         <tr>
                                             <th>Permission</th>
-                                             <th>Add</th>
+                                            <th>Add</th>
                                             <th>Edit</th>
                                             <th>View</th>
                                             <th>Delete</th>
@@ -59,33 +59,35 @@
                                     </thead>
                                     <tbody>
                                         @foreach (Config::get('Permissions.Permissions') as $permation)
-                                        <tr>
-                                            {{-- <td><input type="checkbox" name="permission[user][add]" value="1"></td>
-                                            <td><input type="checkbox" name="permission[user][edit]" value="1"></td>
-                                            <td><input type="checkbox" name="permission[user][view]" value="1"></td>
-                                            <td><input type="checkbox" name="permission[user][delete]" value="1"></td>
-                                            <td><input type="checkbox" name="permission[user][list]" value="1"></td> --}}
-                                        </tr>
                                         @endforeach
 
                                         @php
-                                        foreach (Config::get('Permissions.Permissions') as $key => $value) :
+                                        foreach (Config::get('Permissions.Permissions') as $key => $permation) :
                                         @endphp
+                                        <tr>
                                             <td> @php echo $key @endphp </td>
-                                            @php 
-                                                // foreach ($value as $key) {
-                                                //     @endphp
-                                                //     <td> <input type="checkbox" name="" value="1"></td>
-                                                
-                                                //   @php
-                                                // }
+                                            @php
+                                                foreach($permation as $per) :
+                                                    echo "<td><input type='checkbox' name='permission[${key}][${per}]' value='1'/></td>";   
+                                                endforeach;
                                             @endphp
+                                            
+                                        </tr>
 
                                         @php
                                         endforeach;
                                         @endphp
                                     </tbody>
                                 </table>
+                                @if ($errors->any())
+									<div class="alert alert-danger">
+										<ul>
+											@foreach ($errors->all() as $error)
+												<li>{{ $error }}</li>
+											@endforeach
+										</ul>
+									</div>
+								@endif
 							</div>
 						</div>
 					</div>

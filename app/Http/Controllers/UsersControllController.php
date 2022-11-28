@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\permissions;
-use App\Models\roles;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\permissionsRoles;
-
-
-class PermissionsController extends Controller
+class UsersControllController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +13,7 @@ class PermissionsController extends Controller
      */
     public function index()
     {
-        $permissions = permissions::all();
-        return view('permissions.permission' , compact('permissions'));
+        return view('usersController.usersController');
     }
 
     /**
@@ -29,8 +23,8 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        $rollers = roles::all();
-        return view('permissions.create' , compact('rollers'));
+        return view('usersController.create');
+
     }
 
     /**
@@ -39,22 +33,17 @@ class PermissionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(permissionsRoles $request)
+    public function store(Request $request)
     {
-        permissions::create([
-            'role_id' => $request->role_id,
-            'permissions' => json_encode($request->permission) 
-        ]);
-
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function show(permissions $permissions)
+    public function show()
     {
         //
     }
@@ -62,10 +51,9 @@ class PermissionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function edit(permissions $permissions)
+    public function edit()
     {
         //
     }
@@ -74,10 +62,9 @@ class PermissionsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, permissions $permissions)
+    public function update(Request $request)
     {
         //
     }
@@ -85,10 +72,9 @@ class PermissionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function destroy(permissions $permissions)
+    public function destroy()
     {
         //
     }

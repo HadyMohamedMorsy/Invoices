@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersControllController;
 use App\Http\Controllers\Gettheme;
 
 
@@ -36,6 +37,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
     
             Route::resource('catagories' , CatagoriesController::class);
             Route::post('multi' , [CatagoriesController::class , 'multi']);
+            Route::put('multi/update/{id}' , [CatagoriesController::class , 'multiUpdate']);
             Route::post('search/category' , [CatagoriesController::class , 'search']);
             Route::resource('/products' , ProductsController::class);
 
@@ -62,6 +64,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::resource('/contacts' , ChatsController::class);
             Route::resource('/Roles' , RolesController::class);
             Route::resource('/permissions' , permissionsController::class);
+            Route::resource('/usersController' , UsersControllController::class);
 
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });

@@ -16,6 +16,24 @@
 					</div>
 				</div>
 				<!-- breadcrumb -->
+                
+                @if (Session::has('success'))
+					<div class="alert alert-success">
+						{!! Session::get('success') !!}
+					</div>
+				@endif
+
+				@if (Session::has('updated'))
+					<div class="alert alert-success">
+						{!! Session::get('updated') !!}
+					</div>
+				@endif
+
+				@if (Session::has('Deleted'))
+					<div class="alert alert-success">
+						{!! Session::get('Deleted') !!}
+					</div>
+				@endif
 @endsection
 @section('content')
 				<!-- row -->
@@ -25,7 +43,7 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="main-content-label mg-b-5 mb-3">
-									Details About {{$showCategory->name_cat}}
+									Details About 
 								</div>
 								<div class="table-responsive">
 									<table class="table main-table-reference text-nowrap mb-0 mg-t-5">
@@ -40,22 +58,9 @@
 										</thead>
 										<tbody>
 											<tr>
-												<td>{{ $showCategory->id }}</td>
-												<td>{{ $showCategory->name_cat }}</td>
-												<td>{{ count($products) }}</td>
-												<td>
-													@foreach ($products as $product)
-														{{ $product->name_product.',' }}
-													@endforeach
-												</td>
-												<td> 
-													<a  href={{ route('catagories.edit' , $showCategory->translation_id) }}  class="btn btn-primary"> Edit </a>
-													<form action="{{ route('catagories.destroy' , $showCategory->translation_id) }}" method="POST" class="Delete-form">
-														@csrf
-														{{ method_field('DELETE') }}
-            											<button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete </button>
-													</form>
-												</td>
+												<td></td>
+												<td></td>
+												<td></td>
 											</tr> 
 										</tbody>
 									</table>
