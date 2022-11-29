@@ -131,6 +131,7 @@ class ProductsController extends Controller
 
     public function productMulti(MultiStore $request , ActionProductsMulti $multi){
 
+        // store Multi Products Ar,En And Product Category Related
         $multi->ActionProductsMulti($request);
 
         return redirect('/products')->with("success","This Products Is Added");
