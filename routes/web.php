@@ -1,7 +1,14 @@
 <?php
 
+
+// Auth
 use Illuminate\Support\Facades\Auth;
+
+// Route
 use Illuminate\Support\Facades\Route;
+
+
+// Controller
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CatagoriesController;
@@ -34,13 +41,20 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
     Route::get('/', [HomeController::class, 'index'])->name('home');
     
         Route::group(['middleware' => ['auth']], function () {
-    
+
+            // Controller catagories
             Route::resource('catagories' , CatagoriesController::class);
             Route::post('multi' , [CatagoriesController::class , 'multi']);
             Route::put('multi/update/{id}' , [CatagoriesController::class , 'multiUpdate']);
             Route::post('search/category' , [CatagoriesController::class , 'search']);
-            Route::resource('/products' , ProductsController::class);
+            
 
+            // Controller Products
+            Route::resource('/products' , ProductsController::class);
+            Route::post('/products/Filtration' , [ProductsController::class , 'Filtration'])->name('Filtration');
+            Route::post('product/multi' , [ProductsController::class , 'productMulti']);
+
+            
             // Controller InvoiceItems
             Route::resource('invoiceItems' , InvoiceItemsController::class)->only([
                 'index'
@@ -66,6 +80,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             Route::resource('/permissions' , permissionsController::class);
             Route::resource('/usersController' , UsersControllController::class);
 
+            // get Any File On The Theme This Is Not Continue With My Project
             Route::get('/{page}', [gettheme::class, 'getShowPage']);
         });
     });

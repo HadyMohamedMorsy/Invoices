@@ -15,25 +15,6 @@
 					</div>
 				</div>
 				<!-- breadcrumb -->
-
-
-				@if (Session::has('success'))
-					<div class="alert alert-success">
-						{!! Session::get('success') !!}
-					</div>
-				@endif
-
-				@if (Session::has('updated'))
-					<div class="alert alert-success">
-						{!! Session::get('updated') !!}
-					</div>
-				@endif
-
-				@if (Session::has('Deleted'))
-					<div class="alert alert-success">
-						{!! Session::get('Deleted') !!}
-					</div>
-				@endif
 @endsection
 @section('content')
 				<!-- row -->
@@ -47,8 +28,8 @@
 									<label class="form-label"> Catagories </label>
 									<select name="category_Filter" id="select-beast" class="form-control  nice-select  custom-select">
 										<option value="0">--Select--</option>
-											@foreach ($Catagories as $catagory)
-												<option value="{{ $catagory->translation_id }}"> {{ $catagory->name_cat }}</option>
+											@foreach ($Catagories as $Cat)
+												<option value="{{ $Cat->translation_id }}"> {{ $Cat->name_cat }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -71,30 +52,31 @@
 							@php
 								$i = 0;
 							@endphp
-							@foreach ($products as $product)
-								
-								<div class="col-md-6 col-lg-6 col-xl-4  col-sm-6">
-									<div class="card">
-										<div class="card-body">
-											<div class="pro-img-box">
-												<a href="{{route('products.show' , $product->translation_id)}}">
-													<img class="w-100" src="{{URL::asset('/images/products/'. $product->image_name)}}" alt="product-image">
-												</a>
-												<button class="adtocart" data_product ={{ $product->translation_id }} data_success = "{{ __('notifiy.Success')}}" data_warning = "{{ __('notifiy.Warning')}}" >
-													<input name="token" type="hidden" value="{{ csrf_token() }}" />
-													<i class="las la-shopping-cart "></i>
-												</button>
-											</div>
-											<div class="text-center pt-3">
-												<h3 class="h6 mb-2 mt-4 font-weight-bold text-uppercase">{{ $product->name_product }}</h3>
-												<h4 class="h5 mb-0 mt-2 text-center font-weight-bold text-danger price" data-price = {{ $product->price }}>  {{ $product->price }} $ </h4>
-											</div>
-										</div>
-									</div>
-								</div>
+							@foreach ($FinalFiltration as $product)
+                                @foreach ($product->pro as $productRelatedCatagory)
+                                    <div class="col-md-6 col-lg-6 col-xl-4  col-sm-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="pro-img-box">
+                                                    <a href="{{route('products.show' , $productRelatedCatagory->translation_id)}}">
+                                                        <img class="w-100" src="{{URL::asset('/images/products/'. $productRelatedCatagory->image_name)}}" alt="product-image">
+                                                    </a>
+                                                    <button class="adtocart" data_product ={{ $productRelatedCatagory->translation_id }} data_success = "{{ __('notifiy.Success')}}" data_warning = "{{ __('notifiy.Warning')}}" >
+                                                        <input name="token" type="hidden" value="{{ csrf_token() }}" />
+                                                        <i class="las la-shopping-cart "></i>
+                                                    </button>
+                                                </div>
+                                                <div class="text-center pt-3">
+                                                    <h3 class="h6 mb-2 mt-4 font-weight-bold text-uppercase">{{ $productRelatedCatagory->name_product }}</h3>
+                                                    <h4 class="h5 mb-0 mt-2 text-center font-weight-bold text-danger price" data-price = {{ $productRelatedCatagory->price }}>  {{ $productRelatedCatagory->price }} $ </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
 							@endforeach
 							<ul class="pagination product-pagination mr-auto float-left">
-								{{ $products->links() }}
+								{{ $FinalFiltration->links() }}
 							</ul>
 						</div>
 					</div>

@@ -43,8 +43,8 @@
 												<td>{{ $showProduct->name_product }}</td>
 												<td>{{ $showProduct->price }}</td>
 												<td> 
-													<a  href={{ route('catagories.edit' , $showProduct->translation_id) }}  class="btn btn-primary"> Edit </a>
-													<form action="{{ route('catagories.destroy' , $showProduct->translation_id) }}" method="POST" class="Delete-form">
+													<a  href={{ route('products.edit' , $showProduct->translation_id) }}  class="btn btn-primary"> Edit </a>
+													<form action="{{ route('products.destroy' , $showProduct->translation_id) }}" method="POST" class="Delete-form">
 														@csrf
 														{{ method_field('DELETE') }}
             											<button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete </button>

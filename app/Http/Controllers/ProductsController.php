@@ -2,11 +2,25 @@
 
 namespace App\Http\Controllers;
 
+//Actions
+use App\Http\Controllers\Actions\Products\ActionProducts;
+use App\Http\Controllers\Actions\Products\ActionsProductsStore;
+use App\Http\Controllers\Actions\Products\ActionProductsEdit;
+use App\Http\Controllers\Actions\Products\ActionProductsUpdate;
+use App\Http\Controllers\Actions\Products\ActionProductsDestroy;
+use App\Http\Controllers\Actions\Products\ActionProductsMulti;
+use App\Http\Controllers\Actions\Products\ActionProductsMultiUpdate;
+use App\Http\Controllers\Actions\Products\ActionProductsSearch;
+use App\Http\Controllers\Actions\Products\ActionFiltration;
+
+
 // models
 use App\Models\products;
 use App\Models\Catagories;
-use App\Models\Languages;
 
+//Requests
+use App\Http\Requests\Products\StoreProductsRequest;
+use App\Http\Requests\Products\UpdateRequest;
 
 use Illuminate\Http\Request;
 
@@ -33,74 +47,36 @@ class ProductsController extends Controller
 
     
 
-    public function index()
+    public function index(ActionProducts $GetCatAndProduct)
     {
+        // Translation Automatic When Add Language More AR-FR-EN
         $this->TranslateAutoCatTrait('products');
 
-        $catagoriesProduct =  Catagories::with(['pro' => function($q){
-            $q->where('lang_id' , $this->GetIdLang());
-        }])->where('lang_id' , $this->GetIdLang() )->get();
+        // Get Products From data Base
+        $products = $GetCatAndProduct->GetProducts();
 
-        $products = products::where('lang_id' , $this->GetIdLang())->paginate(6);
+        // Get Catagories From data Base To Put on Filter
+        $Catagories =  $GetCatAndProduct->GetCatagories();
 
-        return view('products.products' , compact(['catagoriesProduct' , 'products']));
+        return view('products.products' , compact(['Catagories' , 'products']));
+
     }
-
 
     public function create()
     {
-
         $GetCatagories = Catagories::where('lang_id' , $this->GetIdLang())->get();
 
         return view('products.create' , compact('GetCatagories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreProductsRequest $request , ActionsProductsStore $Store)
     {
-
-        $validated = $request->validate([
-            $this->GetValidInputLang('name_pro')                 =>   'required|unique:products,name_product|max:50',
-            $this->GetValidInputLang('des_pro')                  =>   'required',
-            'number_pro'                                         =>   'required',
-            'file'                                               =>   'required|max:10000|mimes:pdf,png,jpg',
-        ]);
-
         if($request->file){
 
-            
-            $name_image = $this->GetFile($request->file);
-            
-            foreach($this->LanguagesCount() as $key){
-                
-                $tr = new GoogleTranslate($key->Language_name); // Translates into English
+        // store Products On data Base 
+        $Store->SetProducts($request);
 
-                    products::create([
-                        'name_product'        => $tr->translate($request[$this->GetValidInputLang('name_pro')]),
-                        'description'         => $tr->translate($request[$this->GetValidInputLang('des_pro')]),
-                        'price'               => $request['number_pro'],
-                        'lang_id'             => $key->id,
-                        'image_name'          => $name_image,
-                        'translation_id'      => $request->translation_id,
-                    ]);
-                    
-                }
-
-            $request->file->move('images/products' , $name_image);
-            
-            $latest =   products::orderBy('id', 'desc')->first()->translation_id;
-
-            $product =  products::where('translation_id' , $latest )->where('lang_id' , $this->GetIdLang())->first();
-
-            $product->category()->attach($request->product_category);
-
-            return redirect('/products')->with("success","This Products Is Added");
-
+        return redirect('/products')->with("success","This Products Is Added");
         }   
     }
     public function show($id)
@@ -110,19 +86,52 @@ class ProductsController extends Controller
         return view('products.show' , compact('showProduct'));
     }
 
-    public function edit(products $products)
+    public function edit($id , ActionProducts $GetCategory , ActionProductsEdit $Edit)
     {
-        //
+        // Get Related Product And Category Many to Many 
+        $editProduct =  $Edit->GetProductRelatedCategory($id);
+
+        // Get Category From Query Many To Many 
+        $MySelectedCategory = $Edit->getCategory($id);
+        
+        // Get Category All To Set On Options Selected
+        $Catagories =  $GetCategory->GetCatagories();
+
+        return view('products.edit' , compact(['editProduct' , 'Catagories' , 'MySelectedCategory']));
     }
 
-    public function update(Request $request, products $products)
+    public function update(UpdateRequest $request , $id , ActionProductsUpdate $updating)
     {
-        //
+        // updating Single product And Image And Updating Product Related Catagories  
+        $updating->ActionProductsUpdate($request , $id);
+
+        return redirect('/products')->with("updated","This Products Is updated");
     }
 
-    public function destroy(products $products)
+    public function destroy($id , ActionProductsDestroy $destroyed)
     {
-        //
+        // Deleted Product With  Catagories Related On Table Many To Many 
+        $destroyed->DestroyProducts($id);
+
+        return redirect('/products')->with("Deleted","This Products Is Deleted");
+    }
+
+    public function Filtration(Request $request, ActionFiltration $Filtration , ActionProducts $GetCategory){
+
+        // When Click Filter It Will Be FIlter products Related Catagories Selected 
+        $FinalFiltration =   $Filtration->GetFiltration($request);
+
+        // Get Catagories From data Base To Put on Filter
+        $Catagories =  $GetCategory->GetCatagories();
+
+        return view('products.filtration' , compact(['FinalFiltration' , 'Catagories']));
+
+    }
+
+    public function productMulti(Request $request){
+
+        return $request;
+
     }
 
 }
