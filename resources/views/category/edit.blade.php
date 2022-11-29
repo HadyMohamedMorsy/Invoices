@@ -140,8 +140,6 @@
 			
 			let Get = IdCatagory.split('/');
 
-			console.log(Get);
-			
 			
 			formApplication.setAttribute('action',`http://127.0.0.1:8000/en/multi/update/${Get[Get.length - 2]}`);
 
@@ -159,8 +157,6 @@
 			let IdCatagory = window.location.href;
 			
 			let Get = IdCatagory.split('/');
-
-			console.log(Get);
 
 
 			formApplication.setAttribute('action' , `http://127.0.0.1:8000/en/catagories/update/${Get[Get.length - 2]}`);

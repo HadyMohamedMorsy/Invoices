@@ -21,6 +21,7 @@ use App\Models\Catagories;
 //Requests
 use App\Http\Requests\Products\StoreProductsRequest;
 use App\Http\Requests\Products\UpdateRequest;
+use App\Http\Requests\Products\MultiStore;
 
 use Illuminate\Http\Request;
 
@@ -128,9 +129,11 @@ class ProductsController extends Controller
 
     }
 
-    public function productMulti(Request $request){
+    public function productMulti(MultiStore $request , ActionProductsMulti $multi){
 
-        return $request;
+        $multi->ActionProductsMulti($request);
+
+        return redirect('/products')->with("success","This Products Is Added");
 
     }
 

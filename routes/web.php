@@ -52,7 +52,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(),'middleware' => [ 'lo
             // Controller Products
             Route::resource('/products' , ProductsController::class);
             Route::post('/products/Filtration' , [ProductsController::class , 'Filtration'])->name('Filtration');
-            Route::post('product/multi' , [ProductsController::class , 'productMulti']);
+            Route::post('products/multi' , [ProductsController::class , 'productMulti']);
 
             
             // Controller InvoiceItems

@@ -169,7 +169,13 @@
 			
 			formApplication.removeAttribute('action');
 			
-			formApplication.setAttribute('action' , '/multi');
+			let IdCatagory = window.location.href;
+			
+			let Get = IdCatagory.split('/');
+
+			console.log(Get);
+
+			formApplication.setAttribute('action',`http://127.0.0.1:8000/en/${Get[Get.length - 2]}/multi`);
 
 
 		}else{
@@ -184,7 +190,14 @@
 
 			formApplication.removeAttribute('action');
 
-			formApplication.setAttribute('action' , 'products/store');
+			let IdCatagory = window.location.href;
+			
+			let Get = IdCatagory.split('/');
+
+			console.log(Get);
+
+
+			formApplication.setAttribute('action' , `http://127.0.0.1:8000/en/${Get[Get.length - 2]}`);
 
 		}
 		
